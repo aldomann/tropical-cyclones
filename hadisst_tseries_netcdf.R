@@ -30,8 +30,8 @@ tserie <- xts(tserie, order.by=Date)
 
 # Calculate the climatology for the subp period:
 clim <- as.numeric()
-for(i in 1:12){
-	clim[i] <- mean(tserie[subp][(.indexmon(tserie[subp])+1) == i])
+for(ii in 1:12){
+	clim[ii] <- mean(tserie[subp][(.indexmon(tserie[subp])+1) == ii])
 }
 clim <- xts(rep(clim, length(tserie)/12), order.by=Date)
 
