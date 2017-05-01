@@ -17,10 +17,10 @@ annual.ssts.raster <- get_annual_ssts(hadsst.raster, years = startYear:endYear)
 mean.sst.raster <- get_average_sst(annual.ssts.raster, years = startYear:endYear)
 
 # Crop SST data to a certain region:
-startLat <- -60;
-endLat <- 60;
-startLon <- -40;
-endLon <- 40;
+startLat <- -105;
+endLat <- 20;
+startLon <- 0;
+endLon <- 60;
 annual.ssts.raster <- crop(annual.ssts.raster, extent(startLat, endLat, startLon, endLon))
 mean.sst.raster <- crop(mean.sst.raster, extent(startLat, endLat, startLon, endLon))
 
@@ -33,7 +33,7 @@ annual.ssts.df <- data.frame( t( rasterToPoints( annual.ssts.raster) ) )
 annual.ssts.df <- data.frame(sst = rowMeans(annual.ssts.df[-(1:2),]))
 annual.ssts.df <- annual.ssts.df %>%
 	mutate(year = substring(rownames(annual.ssts.df), 2)) %>%
-	mutate(year = ymd(paste(year, "06", "01", sep="-"))) %>%
+	mutate(year = ymd(paste(year, "01", "01", sep="-"))) %>%
 	mutate(sst.norm = sst/mean.sst)
 annual.ssts.df <- annual.ssts.df[c("year", "sst", "sst.norm")]
 
@@ -41,7 +41,8 @@ annual.ssts.df <- annual.ssts.df[c("year", "sst", "sst.norm")]
 
 # Plot time series using ggplot:
 ggplot(annual.ssts.df) +
-	labs(title = paste0("HadISST between ", startYear, "-", endYear ),
+	labs(title = paste0("NAtl SST between ", startYear, "-", endYear ),
 			 x = "Time (year)", y = "SST/<SST>") +
  	geom_line(aes(x = year, y = sst.norm), colour = "red") +
+	geom_point(aes(x = year, y = sst.norm), colour = "red") +
 	geom_hline(aes(yintercept=1), color = "green")
