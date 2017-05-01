@@ -30,17 +30,18 @@ mean.sst <- mean(mean.sst.df$layer)
 
 # Get annual SST mean of the whole region:
 annual.ssts.df <- data.frame( t( rasterToPoints( annual.ssts.raster) ) )
-annual.ssts.df <- data.frame(mean.sst = rowMeans(annual.ssts.df[-(1:2),]))
-rownames(annual.ssts.df) <- substring(rownames(annual.ssts.df), 2)
-annual.ssts.df <- tibble::rownames_to_column(annual.ssts.df, var = "year")
-annual.ssts.df$year <- ymd(paste(annual.ssts.df$year, "06", "01", sep="-"))
-annual.ssts.df$mean.sst.norm <- (annual.ssts.df$mean.sst)/mean.sst
-
+annual.ssts.df <- data.frame(sst = rowMeans(annual.ssts.df[-(1:2),]))
+annual.ssts.df <- annual.ssts.df %>%
+	mutate(year = substring(rownames(annual.ssts.df), 2)) %>%
+	mutate(year = ymd(paste(year, "06", "01", sep="-"))) %>%
+	mutate(sst.norm = sst/mean.sst)
+annual.ssts.df <- annual.ssts.df[c("year", "sst", "sst.norm")]
 
 # Data visualisation ---------------------------------------
 
-# Plot the result using ggplot:
+# Plot time series using ggplot:
 ggplot(annual.ssts.df) +
 	labs(title = paste0("HadISST between ", startYear, "-", endYear ),
 			 x = "Time (year)", y = "SST/<SST>") +
- 	geom_line(mapping = aes(x = year, y = mean.sst.norm), colour = "red")
+ 	geom_line(aes(x = year, y = sst.norm), colour = "red") +
+	geom_hline(aes(yintercept=1), color = "green")
