@@ -30,7 +30,7 @@ get_pdi_by_id <- function(id){
 	wanted_pdi_df$storm_pdi
 }
 
-# Calculate the DPDI -------------------------------------------------
+# Calculate the DPDI ---------------------------------------
 
 # Function to calculate the DPDI in a range of years
 get_dpdi <- function(min_year, max_year){
@@ -58,14 +58,16 @@ get_dpdi <- function(min_year, max_year){
 }
 
 # Function to plot the DPDI data frame
-plot_dpdi <- function(dpdi_df){
+plot_dpdi <- function(min_year, max_year){
+	dpdi_df <- get_dpdi(min_year, max_year)
 	ggplot(dpdi_df) +
+		geom_line(aes(x = pdi_star, y = dpdi), linetype="dotted") +
 		geom_point(aes(x = pdi_star, y = dpdi)) +
 		scale_x_log10() +
 		scale_y_log10() +
-		labs(title = "Title",
-				 x = "PDI",
-				 y = "D(PDI)")
+		labs(title = paste0("PDI probability density for ", min_year, "-", max_year),
+				 x = "PDI (m^3/s^2)",
+				 y = "D(PDI) (s^2/m^3)")
 }
 
 # Track a storm --------------------------------------------
@@ -102,11 +104,10 @@ track_storm_by_id <- function(id){
 
 # Data visualisation -------------------------------------------------
 
+# dpdi_54_07 <- get_dpdi(1954, 2007)
+plot_dpdi(1954, 2007)
 
-dpdi_54_07 <- get_dpdi(1954, 2007)
-plot_dpdi(dpdi_54_07)
-
-# get_pdi("katrina", "2005")
-# track_storm("Katrina", "2005")
+get_pdi("katrina", "2005")
+track_storm("Katrina", "2005")
 # track_storm("Betsy", "1956")
 # track_storm_by_id("AL191976")
