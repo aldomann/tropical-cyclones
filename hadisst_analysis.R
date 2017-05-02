@@ -14,11 +14,15 @@ source("hadisst_base.R")
 # Plot time series
 plot_annual_sst <- function(data_df){
 	ggplot(data_df) +
-	 	geom_line(aes(x = year, y = sst.norm), colour = "red") +
+	 	geom_line(aes(x = year, y = sst.norm, linetype = "Annual"), colour = "black") +
+		geom_hline(aes(yintercept=1, linetype = "Mean"), colour = "blueviolet") +
+		scale_linetype_manual(values = c("solid", "twodash")) +
 		geom_point(aes(x = year, y = sst.norm, colour = sst.class)) +
-		geom_hline(aes(yintercept=1), color = "green") +
+		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		labs(title = paste0("N. Atl. SST between ", startYear, "-", endYear ),
-				 x = "Time (year)", y = "SST/⟨SST⟩", colour = "SST Class")
+				 x = "Time (year)", y = "SST/⟨SST⟩",
+				 linetype = "SST", colour = "SST Class") +
+		guides(linetype = guide_legend(override.aes=list(colour = c("black", "blueviolet"))))
 }
 
 plot_annual_sst(annual.ssts.df)
