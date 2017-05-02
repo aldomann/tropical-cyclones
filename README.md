@@ -6,7 +6,7 @@ The scripts are used to replicate the analyses and figures from *Scaling of trop
 
 ## Summary of the analysis
 
-Outline of the procedure used in the paper, and thus, my bachelor's thesis.
+Outline of the procedure used in the paper, and thus my bachelor's thesis.
 
 ### Storm track
 Hurricane Katrina is selected as an illustration of the calculation of the PDI.
