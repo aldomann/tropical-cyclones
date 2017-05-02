@@ -77,8 +77,8 @@ track_storm <- function(storm, year){
 	ggplot(hurr_obs %>%
 				 	filter(storm_name == toupper(storm)) %>%
 				 	filter(storm_year == year)) +
-		geom_line(mapping = aes(x = date_time, y = wind), linetype="dotted") +
-		geom_point(mapping = aes(x = date_time, y = wind, colour = status)) +
+		geom_line(aes(x = date_time, y = wind), linetype="dotted") +
+		geom_point(aes(x = date_time, y = wind, colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
 												", PDI = ", scientific(get_pdi(storm, year), digits = 3), " m^3/s^2"),
 				 x = "Time (days)",
@@ -93,8 +93,8 @@ track_storm_by_id <- function(id){
 	storm <- wanted_storm$storm_name
 	year <- wanted_storm$storm_year
 	ggplot(wanted_storm)+
-		geom_line(mapping = aes(x = date_time, y = wind), linetype="dotted") +
-		geom_point(mapping = aes(x = date_time, y = wind, colour = status)) +
+		geom_line(aes(x = date_time, y = wind), linetype="dotted") +
+		geom_point(aes(x = date_time, y = wind, colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
 												", PDI = ", scientific(get_pdi_by_id(id), digits = 3), " m^3/s^2"),
 				 x = "Time (days)",
