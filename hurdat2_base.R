@@ -1,5 +1,5 @@
-# This is code to replicate the analyses and figures from "Scaling of tropical-cyclone dissipation" by Corral et al.
-# Code developed by Alfredo Hernández
+# Base code to study the PDI of hurricane data from the National Hurricane Center (HURDAT)
+# Author: Alfredo Hernández
 
 library(tidyverse)
 library(stringr) # To split lines
@@ -45,19 +45,19 @@ hurr_obs <- bind_rows(hurr_obs) %>%
 
 # Change date and time & unite them
 hurr_obs <- hurr_obs %>%
-	unite(date_time, date, time) %>% 
+	unite(date_time, date, time) %>%
 	mutate(date_time = ymd_hm(date_time)) %>%
 	mutate(decade = substring(year(date_time), 1, 3),
 								decade = paste0(decade, "0s"))
 
 # Meaningful status names
 storm_levels <- c("TD", "TS", "HU", "EX", "SD", "SS", "LO", "WV", "DB")
-storm_labels <- c("Tropical depression", "Tropical storm", "Hurricane", 
-									"Extratropical cyclone", "Subtropical depression", "Subtropical storm", 
+storm_labels <- c("Tropical depression", "Tropical storm", "Hurricane",
+									"Extratropical cyclone", "Subtropical depression", "Subtropical storm",
 									"Other low", "Tropical wave", "Disturbance")
 hurr_obs <- hurr_obs %>%
-	mutate(status = factor(str_trim(status), 
-																levels = storm_levels, 
+	mutate(status = factor(str_trim(status),
+																levels = storm_levels,
 																labels = storm_labels))
 
 # Split the numeric latitude from the direction of that latitude
@@ -100,8 +100,8 @@ hurr_obs <- hurr_obs %>%
 	filter(minute(date_time) == 00)
 
 # Recalculate n_obs
-hurr_obs <- hurr_obs %>% 
-	group_by(storm_id) %>% 
+hurr_obs <- hurr_obs %>%
+	group_by(storm_id) %>%
 	mutate(n_obs = length(wind))
 
 # Rearrange hurr_obs data frame columns

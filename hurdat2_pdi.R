@@ -1,11 +1,11 @@
-# This is code to replicate the analyses and figures from "Scaling of tropical-cyclone dissipation" by Corral et al.
-# Code developed by Alfredo Hernández
+# Code to study the PDI probability density (DPDI)
+# Author: Alfredo Hernández
 
 source("hurdat2_base.R")
 library(measurements) # Convert units
 library(scales) # To show exponents
 
-# Calculate the PDI --------------------------------------------------
+# Calculate the PDI ----------------------------------------
 
 # Create data frame with PDI and year of the storm
 hurr_obs_pdi <- hurr_obs %>%

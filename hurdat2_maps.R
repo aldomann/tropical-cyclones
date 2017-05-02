@@ -1,15 +1,15 @@
-# This is code to replicate the analyses and figures from "Scaling of tropical-cyclone dissipation" by Corral et al.
-# Code developed by Alfredo Hernández
+# Code to track storms in a map
+# Author: Alfredo Hernández
 
 source("hurdat2_base.R")
 
 # Data visualisation -------------------------------------------------
 
 # US East States Map Data
-east_states <- c("florida", "georgia", "south carolina", 
+east_states <- c("florida", "georgia", "south carolina",
 								 "north carolina", "virginia", "maryland",
-								 "delaware", "new jersey", "new york", 
-								 "connecticut", "massachusetts", 
+								 "delaware", "new jersey", "new york",
+								 "connecticut", "massachusetts",
 								 "rhode island", "vermont", "new hampshire",
 								 "maine", "pennsylvania", "west virginia",
 								 "tennessee", "kentucky", "alabama",
@@ -37,14 +37,14 @@ ggplot(world_map, aes(x = long, y = lat, group = group)) +
 map_track <- function(storm, year, map_data = east_us, hurr_data = hurr_obs){
 	to_plot <- hurr_obs %>%
 		filter(storm_name == toupper(storm) & storm_year == year)
-	out <- ggplot(east_us, aes(x = long, y = lat, group = group)) + 
-		geom_polygon(fill = "cornsilk") + 
-		theme_void() + 
-		xlim(c(-108, -65)) + ylim(c(23, 48)) + 
+	out <- ggplot(east_us, aes(x = long, y = lat, group = group)) +
+		geom_polygon(fill = "cornsilk") +
+		theme_void() +
+		xlim(c(-108, -65)) + ylim(c(23, 48)) +
 		geom_path(data = to_plot,
-							aes(x = -longitude, y = latitude, group = NULL)) + 
+							aes(x = -longitude, y = latitude, group = NULL)) +
 		geom_point(data = to_plot,
-							 aes(x = -longitude, y = latitude, group = NULL, 
+							 aes(x = -longitude, y = latitude, group = NULL,
 							 		color = status, size = wind), alpha = 0.5)
 	return(out)
 }
