@@ -14,15 +14,15 @@ library(lubridate)
 hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst.nc")
 
 # Get annual and mean SSTs
-# startYear <- 1966; endYear <- 2007;
-annual.ssts.raster <- get_annual_ssts(hadsst.raster, years = startYear:endYear)
-mean.sst.raster <- get_average_sst(annual.ssts.raster, years = startYear:endYear)
+# start.year <- 1966; end.year <- 2007;
+annual.ssts.raster <- get_annual_ssts(hadsst.raster, years = start.year:end.year)
+mean.sst.raster <- get_average_sst(annual.ssts.raster, years = start.year:end.year)
 
 # Crop SST data to a certain region/basin
-# startLat <- -105; endLat <- 20;
-# startLon <- 0; endLon <- 60;
-annual.ssts.raster <- crop(annual.ssts.raster, extent(startLat, endLat, startLon, endLon))
-mean.sst.raster <- crop(mean.sst.raster, extent(startLat, endLat, startLon, endLon))
+# start.lat <- 20; end.lat <- 90;
+# start.lon <- 5; end.lon <- 25;
+annual.ssts.raster <- crop(annual.ssts.raster, extent(start.lat, end.lat, start.lon, end.lon))
+mean.sst.raster <- crop(mean.sst.raster, extent(start.lat, end.lat, start.lon, end.lon))
 
 # Get mean SST of the whole basin
 mean.sst.df <- data.frame( rasterToPoints( mean.sst.raster) )
@@ -34,9 +34,9 @@ mean.sst <- mean(mean.sst.df$layer)
 annual.ssts.df <- data.frame( t( rasterToPoints( annual.ssts.raster) ) )
 annual.ssts.df <- data.frame(sst = rowMeans(annual.ssts.df[-(1:2),]))
 annual.ssts.df <- annual.ssts.df %>%
-	mutate(year = substring(rownames(annual.ssts.df), 2)) %>%
-	mutate(year = ymd(paste(year, "01", "01", sep="-"))) %>%
-	mutate(sst.norm = sst/mean.sst)
+	mutate(year = substring(rownames(annual.ssts.df), 2),
+				 year = ymd(paste(year, "01", "01", sep="-")),
+				 sst.norm = sst/mean.sst)
 annual.ssts.df <- annual.ssts.df[c("year", "sst", "sst.norm")]
 
 # Separation by SST
