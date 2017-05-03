@@ -63,9 +63,9 @@ hurr_obs <- hurr_obs %>%
 # Split the numeric latitude from the direction of that latitude
 hurr_obs <- hurr_obs %>%
 	mutate(lat_dir = str_extract(latitude, "[A-Z]"),
-								latitude = as.numeric(str_extract(latitude, "[^A-Z]+")),
-								lon_dir = str_extract(longitude, "[A-Z]"),
-								longitude = as.numeric(str_extract(longitude, "[^A-Z]+")))
+				 latitude = as.numeric(str_extract(latitude, "[^A-Z]+")),
+				 lon_dir = str_extract(longitude, "[A-Z]"),
+				 longitude = as.numeric(str_extract(longitude, "[^A-Z]+")))
 
 # Clean up wind column -------------------------------------
 

@@ -104,10 +104,9 @@ track_storm_by_id <- function(id){
 
 # Data visualisation -------------------------------------------------
 
-# dpdi_54_07 <- get_dpdi(1954, 2007)
-plot_dpdi(1954, 2007)
+# plot_dpdi(2004, 2007)
 
-get_pdi("katrina", "2005")
+# get_pdi("katrina", "2005")
 track_storm("Katrina", "2005")
 # track_storm("Betsy", "1956")
 # track_storm_by_id("AL191976")
