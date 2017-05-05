@@ -3,6 +3,8 @@
 
 # Set region and range of years before sourcing ------------
 
+library(stringr)
+
 start.year <- 1966; end.year <- 2007;
 start.lat <- "20E"; end.lat <- "90E";
 start.lon <- "5N"; end.lon <- "25N";

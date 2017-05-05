@@ -12,15 +12,16 @@ library(lubridate)
 
 load_hadsst <- function(file = "./HadISST_sst.nc") {
 	b <- brick(file)
-	NAvalue(b) <- -1000
+	NAvalue(b) <- -1000  # 100% sea-ice-covered
+	NAvalue(b) <- -32768 # Land
 	return(b)
 }
 
-get_annual_ssts <- function(hadsst_raster, years = 1969:2011) {
+get_annual_ssts <- function(hadsst.raster, years = 1969:2011) {
 	mean_rasts <-
 		apply(matrix(years), 1, function(x) {
-			yearIDx <- which(chron::years(hadsst_raster@z$Date) == x)
-			subset_x <- subset(hadsst_raster, yearIDx)
+			yearIDx <- which(chron::years(hadsst.raster@z$Date) == x)
+			subset_x <- subset(hadsst.raster, yearIDx)
 			means <- calc(subset_x, mean, na.rm = TRUE)
 			names(means) <- as.character(x)
 			return(means)
@@ -30,9 +31,9 @@ get_annual_ssts <- function(hadsst_raster, years = 1969:2011) {
 	return(mean_brick)
 }
 
-get_average_sst <- function(hadsst_raster, years = 1969:2011) {
-	yearIDs <- which(chron::years(hadsst_raster@z$Date) %in% years)
-	subset_x <- subset(hadsst_raster, yearIDs)
+get_average_sst <- function(hadsst.raster, years = 1969:2011) {
+	yearIDs <- which(chron::years(hadsst.raster@z$Date) %in% years)
+	subset_x <- subset(hadsst.raster, yearIDs)
 	average_sst <- calc(subset_x, mean, na.rm = TRUE)
 	return(average_sst)
 }
