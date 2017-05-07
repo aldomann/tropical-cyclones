@@ -1,30 +1,20 @@
 # Code to study the PDI dependence with the SST
 # Author: Alfredo Hernández
 
-# Set region and range of years before sourcing ------------
-
-library(stringr)
-
-start.year <- 1966; end.year <- 2007;
-start.lat <- "20E"; end.lat <- "90E";
-start.lon <- "5N"; end.lon <- "25N";
-basin.coords <- c(start.lat, end.lat, start.lon, end.lon)
-
-morph_coord <- function(coords){
-	coords[1] = ifelse(str_extract(coords[1], "[A-Z]") == "W", - as.numeric(str_extract(coords[1], "[^A-Z]+")), as.numeric(str_extract(coords[1], "[^A-Z]+")) )
-	coords[2] = ifelse(str_extract(coords[2], "[A-Z]") == "W", - as.numeric(str_extract(coords[2], "[^A-Z]+")), as.numeric(str_extract(coords[2], "[^A-Z]+")) )
-	coords[3] = ifelse(str_extract(coords[3], "[A-Z]") == "S", - as.numeric(str_extract(coords[3], "[^A-Z]+")), as.numeric(str_extract(coords[3], "[^A-Z]+")) )
-	coords[4] = ifelse(str_extract(coords[4], "[A-Z]") == "S", - as.numeric(str_extract(coords[2], "[^A-Z]+")), as.numeric(str_extract(coords[4], "[^A-Z]+")) )
-	return(coords)
-}
-
-basin.coords <- morph_coord(basin.coords)
-start.lat <- as.numeric(basin.coords[1]); end.lat <- as.numeric(basin.coords[2]);
-start.lon <- as.numeric(basin.coords[3]); end.lon <- as.numeric(basin.coords[4]);
-
 # Source base code -----------------------------------------
 
+# source("hadisst_base_test.R")
 source("hadisst_base.R")
+
+# Create data frames ---------------------------------------
+hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst.nc")
+
+# start.year <- 1966; end.year <- 2007;
+natl.years <- 1966:2007
+natl.coords <- c("90W", "20E", "5N", "25N")
+
+annual.ssts.df <- get_mean_ssts(years = natl.years, range = 6:10, coords = natl.coords)
+# annual.ssts.df <- get_mean_ssts2(years = start.year:end.year, first.range = 12, second.range = 1:4, coords = natl.coords)
 
 # Data visualisation ---------------------------------------
 
@@ -36,10 +26,13 @@ plot_annual_sst <- function(data_df){
 		scale_linetype_manual(values = c("solid", "twodash")) +
 		geom_point(aes(x = year, y = sst.norm, colour = sst.class)) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
-		labs(title = paste0("N. Atl. SST between ", start.year, "-", end.year ),
+		labs(title = paste0("N. Atl. SST between ",
+												year(annual.ssts.df$year[1]), "-",
+												year(annual.ssts.df$year[length(annual.ssts.df$year)]) ),
 				 x = "Time (year)", y = "SST/⟨SST⟩",
 				 linetype = "SST", colour = "SST Class") +
 		guides(linetype = guide_legend(override.aes=list(colour = c("black", "blueviolet"))))
 }
 
 plot_annual_sst(annual.ssts.df)
+table(annual.ssts.df$sst.class)
