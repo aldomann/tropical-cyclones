@@ -85,17 +85,30 @@ get_mean_ssts2 <- function(x = hadsst.raster, years, first.range, second.range, 
 # Data visualisation functions -----------------------------
 
 # Plot time series
-plot_annual_sst <- function(data.df){
+plot_annual_sst <- function(data.df, save = F, pdf = F){
+	title <- attr(data.df, "title")
+	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
 	ggplot(data.df) +
 		geom_line(aes(x = year, y = sst.norm, linetype = "Annual"), colour = "black") +
 		geom_hline(aes(yintercept=1, linetype = "Mean"), colour = "blueviolet") +
 		scale_linetype_manual(values = c("solid", "twodash")) +
 		geom_point(aes(x = year, y = sst.norm, colour = sst.class)) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
-		labs(title = paste0(attr(data.df, "title"), " SST between ",
-												year(data.df$year[1]), "-",
-												year(data.df$year[length(data.df$year)]) ),
+		labs(title = paste0(title, " SST between ", years.str),
 				 x = "Time (year)", y = "SST/⟨SST⟩",
 				 linetype = "SST", colour = "SST Class") +
 		guides(linetype = guide_legend(override.aes=list(colour = c("black", "blueviolet"))))
+	# Save into image/PDF (optional)
+	if (save == T) {
+		save.title <- deparse(substitute(data.df))
+		save.title <- substr(save.title, 1, nchar(save.title)-8)
+		save.title <- toupper(save.title)
+		if (pdf == T) {
+			ggsave(filename = paste0("SSTs", "-", save.title, "-", years.str, ".pdf"),
+						 width = 7.813, height = 4.33, dpi = 96)
+		} else {
+			ggsave(filename = paste0("SSTs", "-", save.title, "-", years.str, ".png"),
+						 width = 7.813, height = 4.33, dpi = 96)
+		}
+	}
 }
