@@ -85,7 +85,9 @@ get_mean_ssts2 <- function(x = hadsst.raster, years, first.range, second.range, 
 # Data visualisation functions -----------------------------
 
 # Plot time series
-plot_annual_sst <- function(data.df, save = F, pdf = F){
+library(extrafont)
+# font_import(paths = "~/TTF") # Only once
+plot_annual_sst <- function(data.df, save = F, pdf = F, lmodern = F){
 	title <- attr(data.df, "title")
 	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
 	sst.plot <- ggplot(data.df) +
@@ -98,6 +100,9 @@ plot_annual_sst <- function(data.df, save = F, pdf = F){
 				 x = "Time (year)", y = "SST/⟨SST⟩",
 				 linetype = "SST", colour = "SST Class") +
 		guides(linetype = guide_legend(override.aes=list(colour = c("black", "blueviolet"))))
+	if (lmodern == T) {
+		sst.plot <- sst.plot + theme(text = element_text(family = "LM Roman 10"))
+	}
 	# Save into image/PDF (optional)
 	if (save == T) {
 		save.title <- deparse(substitute(data.df))
@@ -105,7 +110,7 @@ plot_annual_sst <- function(data.df, save = F, pdf = F){
 		save.title <- toupper(save.title)
 		if (pdf == T) {
 			ggsave(filename = paste0("SSTs", "-", save.title, "-", years.str, ".pdf"),
-						 width = 7.813, height = 4.33, dpi = 96)
+						 width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
 		} else {
 			ggsave(filename = paste0("SSTs", "-", save.title, "-", years.str, ".png"),
 						 width = 7.813, height = 4.33, dpi = 96)
