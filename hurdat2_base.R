@@ -1,5 +1,5 @@
 # Base code to study the PDI of hurricane data from the National Hurricane Center (HURDAT)
-# Author: Alfredo Hernández
+# Author: Alfredo Hernández <aldomann.designs@gmail.com>
 
 library(tidyverse)
 library(stringr) # To split lines

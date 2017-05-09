@@ -1,5 +1,5 @@
 # Base code to study the SST data from the Hadley Centre (HadISST)
-# Author: Alfredo Hernández
+# Author: Alfredo Hernández <aldomann.designs@gmail.com>
 
 library(raster)
 library(stringr)

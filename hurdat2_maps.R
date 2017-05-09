@@ -1,5 +1,5 @@
 # Code to track storms in a map
-# Author: Alfredo Hernández
+# Author: Alfredo Hernández <aldomann.designs@gmail.com>
 
 source("hurdat2_base.R")
 

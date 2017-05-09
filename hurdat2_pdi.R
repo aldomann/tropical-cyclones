@@ -1,5 +1,5 @@
 # Code to study the PDI probability density (DPDI)
-# Author: Alfredo Hernández
+# Author: Alfredo Hernández <aldomann.designs@gmail.com>
 
 source("hurdat2_base.R")
 library(measurements) # Convert units
