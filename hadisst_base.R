@@ -31,18 +31,6 @@ morph_coords <- function(coords){
 	return(coords)
 }
 
-# Normalise SSTs and divide by class
-normalise_ssts <- function(data.df, years){
-	mean.sst <- mean(data.df$sst)
-	data.df <- data.df %>%
-		mutate(year = as.numeric(substring(rownames(data.df), 1)) + years[1] - 1,
-					 year = ymd(paste(year, "01", "01", sep="-")),
-					 sst.norm = sst/mean.sst,
-					 sst.class = ifelse(sst.norm >= 1, "high", "low"))
-	data.df <- data.df[c("year", "sst", "sst.norm", "sst.class")]
-	return(data.df)
-}
-
 # Get mean SSTs data frame filtering by spatial and temporal window of activity
 get_mean_ssts <- function(x = hadsst.raster, years, range = 1:12, coords = c("180W", "180E", "90S", "90N")){
 	coords <- morph_coords(coords)
@@ -80,6 +68,28 @@ get_mean_ssts2 <- function(x = hadsst.raster, years, first.range, second.range, 
 	mean.df <- data.frame(sst = mean.df)
 	mean.df <- normalise_ssts(mean.df, years)
 	return(mean.df)
+}
+
+# Normalise SSTs and divide by class
+normalise_ssts <- function(data.df, years){
+	mean.sst <- mean(data.df$sst)
+	data.df <- data.df %>%
+		mutate(year = as.numeric(substring(rownames(data.df), 1)) + years[1] - 1,
+					 year = ymd(paste(year, "01", "01", sep="-")),
+					 sst.norm = sst/mean.sst,
+					 sst.class = ifelse(sst.norm >= 1, "high", "low"))
+	data.df <- data.df[c("year", "sst", "sst.norm", "sst.class")]
+	return(data.df)
+}
+
+get_low_years <- function(data.df) {
+	low.years <- year(data.df[data.df$sst.class == "low", ]$year)
+	return(low.years)
+}
+
+get_high_years <- function(data.df) {
+	low.years <- year(data.df[data.df$sst.class == "high", ]$year)
+	return(low.years)
 }
 
 # Data visualisation functions -----------------------------
