@@ -60,11 +60,17 @@ attr(sio.ssts.df, "title") <- "S. Ind."
 # table(natl.ssts.df$sst.class)
 # table(epac.ssts.df$sst.class)
 
+# Create vector of low & high SST years
+natl.low.years <- get_low_years(natl.ssts.df)
+natl.high.years <- get_high_years(natl.ssts.df)
+
 # Data visualisation ---------------------------------------
 
 plot_annual_sst(natl.ssts.df)
-plot_annual_sst(wpac.ssts.df)
-plot_annual_sst(epac.ssts.df)
-plot_annual_sst(spac.ssts.df)
-plot_annual_sst(nio.ssts.df)
-plot_annual_sst(sio.ssts.df)
+# plot_annual_sst(wpac.ssts.df, lmodern = T)
+# plot_annual_sst(epac.ssts.df)
+# plot_annual_sst(spac.ssts.df)
+# plot_annual_sst(nio.ssts.df)
+# plot_annual_sst(sio.ssts.df, save = T, pdf = T, lmodern = T)
+
+
