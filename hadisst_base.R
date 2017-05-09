@@ -16,14 +16,18 @@ load_hadsst <- function(file = "./HadISST_sst.nc") {
 
 # Transform basin coordinates into numbers
 morph_coords <- function(coords){
-	coords[1] = ifelse(str_extract(coords[1], "[A-Z]") == "W", - as.numeric(str_extract(coords[1], "[^A-Z]+")),
-										 as.numeric(str_extract(coords[1], "[^A-Z]+")) )
-	coords[2] = ifelse(str_extract(coords[2], "[A-Z]") == "W", - as.numeric(str_extract(coords[2], "[^A-Z]+")),
-										 as.numeric(str_extract(coords[2], "[^A-Z]+")) )
-	coords[3] = ifelse(str_extract(coords[3], "[A-Z]") == "S", - as.numeric(str_extract(coords[3], "[^A-Z]+")),
-										 as.numeric(str_extract(coords[3], "[^A-Z]+")) )
-	coords[4] = ifelse(str_extract(coords[4], "[A-Z]") == "S", - as.numeric(str_extract(coords[2], "[^A-Z]+")),
-										 as.numeric(str_extract(coords[4], "[^A-Z]+")) )
+	coords[1] = ifelse(str_extract(coords[1], "[A-Z]") == "W",
+										 - as.numeric(str_extract(coords[1], "[^A-Z]+")),
+										   as.numeric(str_extract(coords[1], "[^A-Z]+")) )
+	coords[2] = ifelse(str_extract(coords[2], "[A-Z]") == "W",
+										 - as.numeric(str_extract(coords[2], "[^A-Z]+")),
+										   as.numeric(str_extract(coords[2], "[^A-Z]+")) )
+	coords[3] = ifelse(str_extract(coords[3], "[A-Z]") == "S",
+										 - as.numeric(str_extract(coords[3], "[^A-Z]+")),
+										   as.numeric(str_extract(coords[3], "[^A-Z]+")) )
+	coords[4] = ifelse(str_extract(coords[4], "[A-Z]") == "S",
+										 - as.numeric(str_extract(coords[4], "[^A-Z]+")),
+										   as.numeric(str_extract(coords[4], "[^A-Z]+")) )
 	return(coords)
 }
 
