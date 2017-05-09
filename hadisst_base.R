@@ -6,7 +6,8 @@ library(stringr)
 library(tidyverse)
 library(lubridate)
 
-# hadsstR functions ----------------------------------------
+# Data manipulation functions ------------------------------
+
 load_hadsst <- function(file = "./HadISST_sst.nc") {
 	b <- brick(file)
 	NAvalue(b) <- -32768 # Land
@@ -75,4 +76,22 @@ get_mean_ssts2 <- function(x = hadsst.raster, years, first.range, second.range, 
 	mean.df <- data.frame(sst = mean.df)
 	mean.df <- normalise_ssts(mean.df, years)
 	return(mean.df)
+}
+
+# Data visualisation functions -----------------------------
+
+# Plot time series
+plot_annual_sst <- function(data.df){
+	ggplot(data.df) +
+		geom_line(aes(x = year, y = sst.norm, linetype = "Annual"), colour = "black") +
+		geom_hline(aes(yintercept=1, linetype = "Mean"), colour = "blueviolet") +
+		scale_linetype_manual(values = c("solid", "twodash")) +
+		geom_point(aes(x = year, y = sst.norm, colour = sst.class)) +
+		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		labs(title = paste0(attr(data.df, "title"), " SST between ",
+												year(data.df$year[1]), "-",
+												year(data.df$year[length(data.df$year)]) ),
+				 x = "Time (year)", y = "SST/⟨SST⟩",
+				 linetype = "SST", colour = "SST Class") +
+		guides(linetype = guide_legend(override.aes=list(colour = c("black", "blueviolet"))))
 }
