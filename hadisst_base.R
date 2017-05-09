@@ -88,7 +88,7 @@ get_mean_ssts2 <- function(x = hadsst.raster, years, first.range, second.range, 
 plot_annual_sst <- function(data.df, save = F, pdf = F){
 	title <- attr(data.df, "title")
 	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
-	ggplot(data.df) +
+	sst.plot <- ggplot(data.df) +
 		geom_line(aes(x = year, y = sst.norm, linetype = "Annual"), colour = "black") +
 		geom_hline(aes(yintercept=1, linetype = "Mean"), colour = "blueviolet") +
 		scale_linetype_manual(values = c("solid", "twodash")) +
@@ -111,4 +111,5 @@ plot_annual_sst <- function(data.df, save = F, pdf = F){
 						 width = 7.813, height = 4.33, dpi = 96)
 		}
 	}
+	sst.plot
 }
