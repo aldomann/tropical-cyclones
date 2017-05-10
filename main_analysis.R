@@ -20,12 +20,13 @@ plot_dpdi_by_sst_class <- function(ssts.df){
 	dpdi.low.df <- get_dpdi(low.years)
 
 	ggplot() +
-		geom_line(data = dpdi.high.df, aes(x = pdi.star, y = dpdi, colour = "high"), linetype = "dotted") +
-		geom_point(data = dpdi.high.df, aes(x = pdi.star, y = dpdi, colour = "high")) +
-		geom_errorbar(data = dpdi.high.df, aes(x = pdi.star, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error, colour = "high"), width = 0.1) +
-		geom_line(data = dpdi.low.df, aes(x = pdi.star, y = dpdi, colour = "low"), linetype = "dotted") +
-		geom_errorbar(data = dpdi.low.df, aes(x = pdi.star, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error, colour = "low"), width = 0.1) +
-		geom_point(data = dpdi.low.df, aes(x = pdi.star, y = dpdi, colour = "low")) +
+		aes(x = pdi.star, y = dpdi, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error) +
+		geom_line(data = dpdi.high.df, aes(colour = "high"), linetype = "dotted") +
+		geom_point(data = dpdi.high.df, aes(colour = "high")) +
+		geom_errorbar(data = dpdi.high.df, aes(colour = "high"), width = 0.1) +
+		geom_line(data = dpdi.low.df, aes(colour = "low"), linetype = "dotted") +
+		geom_point(data = dpdi.low.df, aes(colour = "low")) +
+		geom_errorbar(data = dpdi.low.df, aes(colour = "low"), width = 0.1) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		scale_x_log10() +
 		scale_y_log10() +
