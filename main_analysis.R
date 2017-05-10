@@ -14,23 +14,23 @@ hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst
 plot_dpdi_by_sst_class <- function(ssts.df){
 	years <- year(ssts.df$year[1]):year(ssts.df$year[length(ssts.df$year)])
 
-	low.years <- get_low_years(ssts.df)
 	high.years <- get_high_years(ssts.df)
-	dpdi.low.df <- get_dpdi(low.years)
+	low.years <- get_low_years(ssts.df)
 	dpdi.high.df <- get_dpdi(high.years)
+	dpdi.low.df <- get_dpdi(low.years)
 
 	ggplot() +
-		geom_line(data = dpdi.low.df, aes(x = pdi.star, y = dpdi), linetype = "dotted") +
-		geom_point(data = dpdi.low.df, aes(x = pdi.star, y = dpdi)) +
-		geom_line(data = dpdi.high.df, aes(x = pdi.star, y = dpdi), linetype = "dotted") +
-		geom_point(data = dpdi.high.df, aes(x = pdi.star, y = dpdi)) +
+		geom_line(data = dpdi.high.df, aes(x = pdi.star, y = dpdi, colour = "high"), linetype = "dotted") +
+		geom_point(data = dpdi.high.df, aes(x = pdi.star, y = dpdi, colour = "high")) +
+		geom_line(data = dpdi.low.df, aes(x = pdi.star, y = dpdi, colour = "low"), linetype = "dotted") +
+		geom_point(data = dpdi.low.df, aes(x = pdi.star, y = dpdi, colour = "low")) +
+		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		scale_x_log10() +
 		scale_y_log10() +
 		labs(title = paste0("PDI probability density for ",
 												years[1], "-", years[length(years)],
 												" (", attr(ssts.df, "title"), ")"),
-				 x = "PDI (m^3/s^2)",
-				 y = "D(PDI) (s^2/m^3)")
+				 x = "PDI (m^3/s^2)", y = "D(PDI) (s^2/m^3)", colour = "SST Class")
 }
 
 # Create PDI data frame ------------------------------------
@@ -97,21 +97,14 @@ attr(sio.ssts.df, "title") <- "S. Ind."
 # table(natl.ssts.df$sst.class)
 # table(epac.ssts.df$sst.class)
 
-# Create vector of low & high SST years
-natl.low.years <- get_low_years(natl.ssts.df)
-natl.high.years <- get_high_years(natl.ssts.df)
-plot_dpdi(natl.high.years)
-plot_dpdi(natl.low.years)
-
 # Data visualisation ---------------------------------------
 
 plot_annual_sst(natl.ssts.df)
-# plot_annual_sst(wpac.ssts.df, lmodern = T)
+# plot_annual_sst(wpac.ssts.df)
 # plot_annual_sst(epac.ssts.df)
 # plot_annual_sst(spac.ssts.df)
 # plot_annual_sst(nio.ssts.df)
 # plot_annual_sst(sio.ssts.df, save = T, pdf = T, lmodern = T)
-
 
 # DPDI plots by SST class ----------------------------------
 
