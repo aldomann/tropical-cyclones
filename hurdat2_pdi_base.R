@@ -53,10 +53,10 @@ get_dpdi <- function(years){
 # Function to plot the DPDI data frame
 plot_dpdi <- function(years){
 	dpdi.df <- get_dpdi(years)
-	ggplot(dpdi.df) +
-		geom_line(aes(x = pdi.star, y = dpdi), linetype = "dotted") +
-		geom_point(aes(x = pdi.star, y = dpdi)) +
-		geom_errorbar(aes(x = pdi.star, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error), width = 0.1) +
+	ggplot(dpdi.df, aes(x = pdi.star, y = dpdi, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error)) +
+		geom_line(linetype = "dotted") +
+		geom_point() +
+		geom_errorbar(width = 0.1) +
 		scale_x_log10() +
 		scale_y_log10() +
 		labs(title = paste0("PDI probability density for ", years[1], "-", years[length(years)]),
@@ -69,9 +69,10 @@ plot_dpdi <- function(years){
 track_storm <- function(storm, year){
 	ggplot(hurr.obs %>%
 				 	filter(storm.name == toupper(storm)) %>%
-				 	filter(storm.year == year)) +
-		geom_line(aes(x = date.time, y = wind), linetype = "dotted") +
-		geom_point(aes(x = date.time, y = wind, colour = status)) +
+				 	filter(storm.year == year),
+				 aes(x = date.time, y = wind)) +
+		geom_line(linetype = "dotted") +
+		geom_point(aes(colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
 												", PDI = ", scientific(get_pdi(storm, year), digits = 3), " m^3/s^2"),
 				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")
@@ -83,9 +84,9 @@ track_storm_by_id <- function(id){
 		filter(storm.id == id)
 	storm <- wanted.storm$storm.name
 	year <- wanted.storm$storm.year
-	ggplot(wanted.storm)+
-		geom_line(aes(x = date.time, y = wind), linetype="dotted") +
-		geom_point(aes(x = date.time, y = wind, colour = status)) +
+	ggplot(wanted.storm, aes(x = date.time, y = wind))+
+		geom_line(linetype="dotted") +
+		geom_point(aes(colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
 												", PDI = ", scientific(get_pdi_by_id(id), digits = 3), " m^3/s^2"),
 				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")

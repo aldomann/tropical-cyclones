@@ -107,11 +107,11 @@ plot_annual_sst <- function(data.df, save = F, pdf = F, lmodern = F){
 	title <- attr(data.df, "title")
 	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
 
-	sst.plot <- ggplot(data.df) +
-		geom_line(aes(x = year, y = sst.norm, linetype = "Annual"), colour = "black") +
+	sst.plot <- ggplot(data.df, aes(x = year, y = sst.norm)) +
+		geom_line(aes(linetype = "Annual"), colour = "black") +
 		geom_hline(aes(yintercept = 1, linetype = "Mean"), colour = "blueviolet") +
 		scale_linetype_manual(values = c("solid", "twodash")) +
-		geom_point(aes(x = year, y = sst.norm, colour = sst.class)) +
+		geom_point(aes(colour = sst.class)) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		labs(title = paste0(title, " SST between ", years.str),
 				 x = "Time (year)", y = "SST/⟨SST⟩",
