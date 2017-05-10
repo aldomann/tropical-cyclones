@@ -20,6 +20,8 @@ The large-scale application of the same calculation yields the PDI probability d
 Separating years of high and low sea surface temperature, for example, splits the probability density into two contributions, shown here for the North Atlantic.
 ![image](images/git-sst-analysis.png)
 
+![image](images/git-sst-analysis2.png)
+
 
 ## References
 
