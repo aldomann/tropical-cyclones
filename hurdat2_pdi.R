@@ -15,6 +15,7 @@ hurr.obs.pdi <- hurr.obs %>%
 
 # Data visualisation -------------------------------------------------
 
+test.dpdi <- get_dpdi(2004:2007)
 plot_dpdi(2004:2007)
 
 # get_pdi("katrina", "2005")

@@ -22,7 +22,9 @@ plot_dpdi_by_sst_class <- function(ssts.df){
 	ggplot() +
 		geom_line(data = dpdi.high.df, aes(x = pdi.star, y = dpdi, colour = "high"), linetype = "dotted") +
 		geom_point(data = dpdi.high.df, aes(x = pdi.star, y = dpdi, colour = "high")) +
+		geom_errorbar(data = dpdi.high.df, aes(x = pdi.star, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error, colour = "high"), width = 0.1) +
 		geom_line(data = dpdi.low.df, aes(x = pdi.star, y = dpdi, colour = "low"), linetype = "dotted") +
+		geom_errorbar(data = dpdi.low.df, aes(x = pdi.star, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error, colour = "low"), width = 0.1) +
 		geom_point(data = dpdi.low.df, aes(x = pdi.star, y = dpdi, colour = "low")) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		scale_x_log10() +

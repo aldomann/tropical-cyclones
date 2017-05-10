@@ -43,7 +43,8 @@ get_dpdi <- function(years){
 					 pdi.bin = pdi.max - pdi.min) %>%
 		rowwise() %>%
 		mutate(ndpdi = sum(hurr.obs.pdi$storm.pdi >= pdi.min & hurr.obs.pdi$storm.pdi <= pdi.max),
-					 dpdi = ndpdi/(length(hurr.obs.pdi$storm.pdi)*pdi.bin)) %>%
+					 dpdi = ndpdi/(length(hurr.obs.pdi$storm.pdi)*pdi.bin),
+					 pdi.error = dpdi / sqrt(ndpdi) ) %>%
 		filter(dpdi != 0)
 
 	return(dpdi.df)
@@ -55,11 +56,11 @@ plot_dpdi <- function(years){
 	ggplot(dpdi.df) +
 		geom_line(aes(x = pdi.star, y = dpdi), linetype = "dotted") +
 		geom_point(aes(x = pdi.star, y = dpdi)) +
+		geom_errorbar(aes(x = pdi.star, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error), width = 0.1) +
 		scale_x_log10() +
 		scale_y_log10() +
 		labs(title = paste0("PDI probability density for ", years[1], "-", years[length(years)]),
-				 x = "PDI (m^3/s^2)",
-				 y = "D(PDI) (s^2/m^3)")
+				 x = "PDI (m^3/s^2)", y = "D(PDI) (s^2/m^3)")
 }
 
 # Track a storm --------------------------------------------
