@@ -29,7 +29,7 @@ hurr_meta <- lapply(hurr_meta, tibble::as_tibble)
 hurr_meta <- bind_rows(hurr_meta)
 
 hurr_meta <- hurr_meta %>%
-	select(-V4) %>%
+	dplyr::select(-V4) %>%
 	rename(storm_id = V1, storm_name = V2, n_obs = V3) %>%
 	mutate(storm_name = str_trim(storm_name),
 								n_obs = as.numeric(n_obs))
@@ -40,7 +40,7 @@ storm_id <- rep(hurr_meta$storm_id, times = hurr_meta$n_obs)
 hurr_obs <- lapply(hurr_obs, tibble::as_tibble)
 hurr_obs <- bind_rows(hurr_obs) %>%
 	mutate(storm_id = storm_id) %>%
-	select(storm_id, V1, V2, V4:V7) %>%
+	dplyr::select(storm_id, V1, V2, V4:V7) %>%
 	rename(date = V1, time = V2, status = V4, latitude = V5, longitude = V6, wind = V7)
 
 # Change date and time & unite them
