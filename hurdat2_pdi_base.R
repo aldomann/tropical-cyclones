@@ -53,7 +53,7 @@ get_dpdi <- function(years){
 plot_dpdi <- function(years){
 	dpdi.df <- get_dpdi(years)
 	ggplot(dpdi.df) +
-		geom_line(aes(x = pdi.star, y = dpdi), linetype="dotted") +
+		geom_line(aes(x = pdi.star, y = dpdi), linetype = "dotted") +
 		geom_point(aes(x = pdi.star, y = dpdi)) +
 		scale_x_log10() +
 		scale_y_log10() +
@@ -69,13 +69,11 @@ track_storm <- function(storm, year){
 	ggplot(hurr.obs %>%
 				 	filter(storm.name == toupper(storm)) %>%
 				 	filter(storm.year == year)) +
-		geom_line(aes(x = date.time, y = wind), linetype="dotted") +
+		geom_line(aes(x = date.time, y = wind), linetype = "dotted") +
 		geom_point(aes(x = date.time, y = wind, colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
 												", PDI = ", scientific(get_pdi(storm, year), digits = 3), " m^3/s^2"),
-				 x = "Time (days)",
-				 y = "Velocity (kt)",
-				 colour = "Status")
+				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")
 }
 
 # Track of a single storm by id
@@ -89,7 +87,5 @@ track_storm_by_id <- function(id){
 		geom_point(aes(x = date.time, y = wind, colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
 												", PDI = ", scientific(get_pdi_by_id(id), digits = 3), " m^3/s^2"),
-				 x = "Time (days)",
-				 y = "Velocity (kt)",
-				 colour = "Status")
+				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")
 }
