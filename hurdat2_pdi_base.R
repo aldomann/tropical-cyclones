@@ -17,7 +17,7 @@ get_pdi <- function(storm, year){
 
 # Get PDI of a single storm by id
 get_pdi_by_id <- function(id){
-	wanted.pdi.df <-hurr.obs.pdi %>%
+	wanted.pdi.df <- hurr.obs.pdi %>%
 		filter(storm.id == id)
 	wanted.pdi.df$storm.pdi
 }
