@@ -7,106 +7,112 @@ library(lubridate) # Use dates
 
 # Read and split raw data --------------------------------------------
 
-# tracks_url <- paste0("http://www.nhc.noaa.gov/data/hurdat/", "hurdat2-1851-2015-070616.txt")
-tracks_file <- paste0("hurdat2-1851-2015-070616.txt")
-hurr_tracks <- readLines(tracks_file)
+# tracks.url <- paste0("http://www.nhc.noaa.gov/data/hurdat/", "hurdat2-1851-2015-070616.txt")
+tracks.file <- paste0("hurdat2-1851-2015-070616.txt")
+hurr.tracks <- readLines(tracks.file)
 
-hurr_tracks <- lapply(hurr_tracks, str_split,
-											pattern = ",",
-											simplify = TRUE)
+hurr.tracks <- lapply(hurr.tracks, str_split, pattern = ",", simplify = TRUE)
 
 # Clean the raw data -------------------------------------------------
 
-# Split the hurr_tracks into meta and observation lists
-hurr_lengths <- sapply(hurr_tracks, length)
-hurr_meta <- hurr_tracks[hurr_lengths == 4]
-hurr_obs <- hurr_tracks[hurr_lengths == 21]
+# Split the hurr.tracks into meta and observation lists
+hurr.lengths <- sapply(hurr.tracks, length)
+hurr.meta <- hurr.tracks[hurr.lengths == 4]
+hurr.obs <- hurr.tracks[hurr.lengths == 21]
 
-rm(hurr_tracks) # Clean memory
+rm(hurr.tracks) # Clean memory
 
 # Create and clean meta data frame
-hurr_meta <- lapply(hurr_meta, tibble::as_tibble)
-hurr_meta <- bind_rows(hurr_meta)
+hurr.meta <- lapply(hurr.meta, tibble::as_tibble)
+hurr.meta <- bind_rows(hurr.meta)
 
-hurr_meta <- hurr_meta %>%
+hurr.meta <- hurr.meta %>%
 	dplyr::select(-V4) %>%
-	rename(storm_id = V1, storm_name = V2, n_obs = V3) %>%
-	mutate(storm_name = str_trim(storm_name),
-								n_obs = as.numeric(n_obs))
+	rename(storm.id = V1, storm.name = V2, n.obs = V3) %>%
+	mutate(storm.name = str_trim(storm.name),
+				 n.obs = as.numeric(n.obs))
 
-storm_id <- rep(hurr_meta$storm_id, times = hurr_meta$n_obs)
+storm.id <- rep(hurr.meta$storm.id, times = hurr.meta$n.obs)
 
 # Create and clean obs data frame
-hurr_obs <- lapply(hurr_obs, tibble::as_tibble)
-hurr_obs <- bind_rows(hurr_obs) %>%
-	mutate(storm_id = storm_id) %>%
-	dplyr::select(storm_id, V1, V2, V4:V7) %>%
+hurr.obs <- lapply(hurr.obs, tibble::as_tibble)
+hurr.obs <- bind_rows(hurr.obs) %>%
+	mutate(storm.id = storm.id) %>%
+	dplyr::select(storm.id, V1, V2, V4:V7) %>%
 	rename(date = V1, time = V2, status = V4, latitude = V5, longitude = V6, wind = V7)
 
 # Change date and time & unite them
-hurr_obs <- hurr_obs %>%
-	unite(date_time, date, time) %>%
-	mutate(date_time = ymd_hm(date_time)) %>%
-	mutate(decade = substring(year(date_time), 1, 3),
-								decade = paste0(decade, "0s"))
+hurr.obs <- hurr.obs %>%
+	unite(date.time, date, time) %>%
+	mutate(date.time = ymd_hm(date.time)) %>%
+	mutate(decade = substring(year(date.time), 1, 3),
+				 decade = paste0(decade, "0s"))
 
 # Meaningful status names
-storm_levels <- c("TD", "TS", "HU", "EX", "SD", "SS", "LO", "WV", "DB")
-storm_labels <- c("Tropical depression", "Tropical storm", "Hurricane",
+storm.levels <- c("TD", "TS", "HU", "EX", "SD", "SS", "LO", "WV", "DB")
+storm.labels <- c("Tropical depression", "Tropical storm", "Hurricane",
 									"Extratropical cyclone", "Subtropical depression", "Subtropical storm",
 									"Other low", "Tropical wave", "Disturbance")
-hurr_obs <- hurr_obs %>%
+hurr.obs <- hurr.obs %>%
 	mutate(status = factor(str_trim(status),
-																levels = storm_levels,
-																labels = storm_labels))
+												 levels = storm.levels,
+												 labels = storm.labels))
 
 # Split the numeric latitude from the direction of that latitude
-hurr_obs <- hurr_obs %>%
-	mutate(lat_dir = str_extract(latitude, "[A-Z]"),
+hurr.obs <- hurr.obs %>%
+	mutate(lat.dir = str_extract(latitude, "[A-Z]"),
 				 latitude = as.numeric(str_extract(latitude, "[^A-Z]+")),
-				 lon_dir = str_extract(longitude, "[A-Z]"),
+				 lon.dir = str_extract(longitude, "[A-Z]"),
 				 longitude = as.numeric(str_extract(longitude, "[^A-Z]+")))
 
 # Clean up wind column -------------------------------------
 
 # Clean and reformat the wind column
-hurr_obs <- hurr_obs %>%
+hurr.obs <- hurr.obs %>%
 	mutate(wind = ifelse(wind == " -99", NA, as.numeric(wind)))
 
 # Manually change odd middle value for AL191976
-hurr_obs <- hurr_obs %>%
-	mutate(wind = ifelse(storm_id == "AL191976" & is.na(wind), 20, wind)) %>%
+hurr.obs <- hurr.obs %>%
+	mutate(wind = ifelse(storm.id == "AL191976" & is.na(wind), 20, wind)) %>%
 	filter(is.na(wind) != TRUE)
 
-# Add useful info to hurr_obs data frame --------------------
+# Add useful info to hurr.obs data frame --------------------
 
 # Add category 5 hurricanes boolean
-# hurr_obs <- hurr_obs %>%
-# 	group_by(storm_id) %>%
-# 	mutate(cat_5 = max(wind) >= 137) %>%
+# hurr.obs <- hurr.obs %>%
+# 	group_by(storm.id) %>%
+# 	mutate(cat.5 = max(wind) >= 137) %>%
 # 	ungroup()
 
-# Add storm_name and storm_year to hurr_obs
-hurr_obs <- hurr_obs %>%
-	left_join(hurr_meta, by = "storm_id") %>%
-	mutate(storm_year = year(date_time))
+# Add storm.name and storm.year to hurr.obs
+hurr.obs <- hurr.obs %>%
+	left_join(hurr.meta, by = "storm.id") %>%
+	mutate(storm.year = year(date.time))
 
-# Ignore data outside the delta_t = 6 hours
-hurr_obs <- hurr_obs %>%
-	filter(hour(date_time) == 00 |
-									hour(date_time) == 06 |
-									hour(date_time) == 12 |
-									hour(date_time) == 18) %>%
-	filter(minute(date_time) == 00)
+# Ignore data outside the delta.t = 6 hours
+hurr.obs <- hurr.obs %>%
+	filter(hour(date.time) == 00 |
+				 hour(date.time) == 06 |
+				 hour(date.time) == 12 |
+				 hour(date.time) == 18) %>%
+	filter(minute(date.time) == 00)
 
-# Recalculate n_obs
-hurr_obs <- hurr_obs %>%
-	group_by(storm_id) %>%
-	mutate(n_obs = length(wind))
+# Recalculate n.obs
+hurr.obs <- hurr.obs %>%
+	group_by(storm.id) %>%
+	mutate(n.obs = length(wind))
 
-# Rearrange hurr_obs data frame columns
-# 	"delta_t" after "date_time"
-# 	"cat_5" after "wind"
-hurr_obs <- hurr_obs[c("storm_id", "storm_name", "n_obs", "date_time", "status",
-											 "latitude", "lat_dir", "longitude", "lon_dir",
-											 "wind", "storm_year", "decade")]
+# Rearrange hurr.obs data frame columns
+# 	"delta.t" after "date.time"
+# 	"cat.5" after "wind"
+hurr.obs <- hurr.obs[c("storm.id", "storm.name", "n.obs", "date.time", "status",
+											 "latitude", "lat.dir", "longitude", "lon.dir",
+											 "wind", "storm.year", "decade")]
+
+# Remove unneeded variables
+rm(hurr.meta)
+rm(hurr.lengths)
+rm(storm.id)
+rm(storm.labels)
+rm(storm.levels)
+rm(tracks.file)
