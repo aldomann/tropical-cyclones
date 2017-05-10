@@ -3,8 +3,19 @@
 
 # Source base code -----------------------------------------
 source("hadisst_base.R")
+source("hurdat2_pdi_base.R")
 
 hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst.nc")
+
+# Create PDI data frame ------------------------------------
+
+# Create data frame with PDI and year of the storm
+hurr_obs_pdi <- hurr_obs %>%
+	group_by(storm_id, storm_name, n_obs) %>%
+	summarise(storm_pdi = sum(conv_unit(wind, "knot", "m_per_sec")^3 * conv_unit(6, "hr", "sec"))) %>%
+	mutate(storm_year = substring(storm_id, 5, 9)) %>%
+	filter(storm_pdi != "NA") %>%
+	filter(storm_pdi != 0)
 
 # Create SST data frames -----------------------------------
 
@@ -63,6 +74,8 @@ attr(sio.ssts.df, "title") <- "S. Ind."
 # Create vector of low & high SST years
 natl.low.years <- get_low_years(natl.ssts.df)
 natl.high.years <- get_high_years(natl.ssts.df)
+plot_dpdi(natl.high.years)
+plot_dpdi(natl.low.years)
 
 # Data visualisation ---------------------------------------
 
