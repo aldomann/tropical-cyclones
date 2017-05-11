@@ -8,9 +8,8 @@ library(lubridate) # Use dates
 # Read and split raw data --------------------------------------------
 
 # tracks.url <- paste0("http://www.aoml.noaa.gov/hrd/hurdat/", "hurdat2-nepac-1949-2016-apr2017.txt")
-tracks.file <- paste0("hurdat2-nepac-1949-2016-apr2017.txt")
+tracks.file <- paste0("data/hurdat2-nepac-1949-2016-apr2017.txt")
 hurr.tracks <- readLines(tracks.file)
-
 hurr.tracks <- lapply(hurr.tracks, str_split, pattern = ",", simplify = TRUE)
 
 # Clean the raw data -------------------------------------------------
@@ -60,13 +59,13 @@ hurr.epac.obs <- hurr.epac.obs %>%
 morph_long <- function(long){
 	long <- ifelse(str_extract(long, "[A-Z]") == "W",
 								 - as.numeric(str_extract(long, "[^A-Z]+")),
-								 as.numeric(str_extract(long, "[^A-Z]+")) )
+								   as.numeric(str_extract(long, "[^A-Z]+")) )
 	return(long)
 }
 morph_lat <- function(lat){
 	lat <- ifelse(str_extract(lat, "[A-Z]") == "S",
 								- as.numeric(str_extract(lat, "[^A-Z]+")),
-								as.numeric(str_extract(lat, "[^A-Z]+")) )
+								  as.numeric(str_extract(lat, "[^A-Z]+")) )
 	return(lat)
 }
 

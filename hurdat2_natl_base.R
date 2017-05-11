@@ -8,11 +8,8 @@ library(lubridate) # Use dates
 # Read and split raw data --------------------------------------------
 
 # tracks.url <- paste0("http://www.aoml.noaa.gov/hrd/hurdat/", "hurdat2-1851-2016-apr2017.txt")
-tracks.file <- paste0("hurdat2-1851-2016-apr2017.txt")
-# tracks.file <- paste0("hurdat2-1851-2015-070616.txt")
-
+tracks.file <- paste0("data/hurdat2-1851-2016-apr2017.txt")
 hurr.tracks <- readLines(tracks.file)
-
 hurr.tracks <- lapply(hurr.tracks, str_split, pattern = ",", simplify = TRUE)
 
 # Clean the raw data -------------------------------------------------
