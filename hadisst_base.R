@@ -32,7 +32,7 @@ morph_coords <- function(coords){
 }
 
 # Get mean SSTs data frame filtering by spatial and temporal window of activity
-get_mean_ssts <- function(x = hadsst.raster, years, range = 1:12,
+get_mean_ssts <- function(x = hadsst.raster, years, range = 6:10,
 													coords = c("180W", "180E", "90S", "90N")){
 	coords <- morph_coords(coords)
 	aoi <- extent(as.numeric(coords))
