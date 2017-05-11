@@ -6,19 +6,16 @@ source("hurdat2_pdi_base.R")
 # Calculate the PDI ----------------------------------------
 
 # Create data frame with PDI and year of the storm
-hurr.obs.pdi <- hurr.obs %>%
-	group_by(storm.id, storm.name, n.obs) %>%
-	summarise(storm.pdi = sum(conv_unit(wind, "knot", "m_per_sec")^3 * conv_unit(6, "hr", "sec"))) %>%
-	mutate(storm.year = substring(storm.id, 5, 9)) %>%
-	filter(storm.pdi != "NA") %>%
-	filter(storm.pdi != 0)
+hurr.natl.pdi <- get_pdi_df(hurr.natl.obs)
+hurr.epac.pdi <- get_pdi_df(hurr.epac.obs)
+hurr.all.pdi <- get_pdi_df(hurr.all.obs)
 
 # Data visualisation -------------------------------------------------
 
-test.dpdi <- get_dpdi(2004:2007)
-plot_dpdi(2004:2007)
+test.dpdi <- get_dpdi(hurr.natl.pdi, 2004:2007)
+plot_dpdi(hurr.all.pdi, 2004:2007)
 
-# get_pdi("katrina", "2005")
-track_storm("Katrina", "2005")
-# track_storm("Betsy", "1956")
-# track_storm_by_id("AL191976")
+get_pdi(hurr.natl.pdi, "katrina", 2005)
+track_storm(hurr.natl.obs, "Katrina", 2005)
+track_storm(hurr.natl.obs, "Betsy", "1956")
+track_storm_by_id(hurr.natl.obs, "AL191976")

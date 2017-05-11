@@ -1,14 +1,28 @@
 # Base code to study the PDI probability density (DPDI)
 # Author: Alfredo Hernández <aldomann.designs@gmail.com>
 
-source("hurdat2_base.R")
+source("hurdat2_natl_base.R")
+source("hurdat2_epac_base.R")
+hurr.all.obs <- rbind(hurr.natl.obs, hurr.epac.obs)
+
 library(measurements) # Convert units
 library(scales) # To show exponents
 
 # Calculate the PDI ----------------------------------------
 
+# Create data frame with PDI and year of the storm
+get_pdi_df <- function(hurr.obs){
+	hurr.obs.pdi <- hurr.obs %>%
+		group_by(storm.id, storm.name, n.obs) %>%
+		summarise(storm.pdi = sum(conv_unit(wind, "knot", "m_per_sec")^3 * conv_unit(6, "hr", "sec"))) %>%
+		mutate(storm.year = substring(storm.id, 5, 9)) %>%
+		filter(storm.pdi != "NA") %>%
+		filter(storm.pdi != 0)
+	return(hurr.obs.pdi)
+}
+
 # Get PDI of a single storm by name
-get_pdi <- function(storm, year){
+get_pdi <- function(hurr.obs.pdi, storm, year){
 	wanted.pdi.df <- hurr.obs.pdi %>%
 		filter(storm.name == toupper(storm)) %>%
 		filter(storm.year == year)
@@ -16,7 +30,7 @@ get_pdi <- function(storm, year){
 }
 
 # Get PDI of a single storm by id
-get_pdi_by_id <- function(id){
+get_pdi_by_id <- function(hurr.obs.pdi, id){
 	wanted.pdi.df <- hurr.obs.pdi %>%
 		filter(storm.id == id)
 	wanted.pdi.df$storm.pdi
@@ -25,7 +39,7 @@ get_pdi_by_id <- function(id){
 # Calculate and plot the DPDI ------------------------------
 
 # Function to calculate the DPDI in a range of years
-get_dpdi <- function(years){
+get_dpdi <- function(hurr.obs.pdi, years){
 	hurr.obs.pdi <- hurr.obs.pdi %>%
 		filter(storm.year %in% years)
 
@@ -37,7 +51,6 @@ get_dpdi <- function(years){
 		dpdi.df <- rbind(dpdi.df, c(c^(i-1)*m, c^(i)*m))
 	}
 	colnames(dpdi.df) <- c("pdi.min", "pdi.max")
-
 	dpdi.df <- dpdi.df %>%
 		mutate(pdi.star = sqrt(pdi.min * pdi.max),
 					 pdi.bin = pdi.max - pdi.min) %>%
@@ -51,8 +64,8 @@ get_dpdi <- function(years){
 }
 
 # Function to plot the DPDI data frame
-plot_dpdi <- function(years){
-	dpdi.df <- get_dpdi(years)
+plot_dpdi <- function(hurr.obs.pdi, years){
+	dpdi.df <- get_dpdi(hurr.obs.pdi, years)
 	ggplot(dpdi.df, aes(x = pdi.star, y = dpdi, ymin = dpdi-pdi.error, ymax = dpdi+pdi.error)) +
 		geom_line(linetype = "dotted") +
 		geom_point() +
@@ -66,7 +79,7 @@ plot_dpdi <- function(years){
 # Track a storm --------------------------------------------
 
 # Track of a single storm by name
-track_storm <- function(storm, year){
+track_storm <- function(hurr.obs = hurr.all.obs, storm, year){
 	ggplot(hurr.obs %>%
 				 	filter(storm.name == toupper(storm)) %>%
 				 	filter(storm.year == year),
@@ -74,12 +87,12 @@ track_storm <- function(storm, year){
 		geom_line(linetype = "dotted") +
 		geom_point(aes(colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
-												", PDI = ", scientific(get_pdi(storm, year), digits = 3), " m^3/s^2"),
+												", PDI = ", scientific(get_pdi(hurr.all.pdi, storm, year), digits = 3), " m^3/s^2"),
 				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")
 }
 
 # Track of a single storm by id
-track_storm_by_id <- function(id){
+track_storm_by_id <- function(hurr.obs = hurr.all.obs, id){
 	wanted.storm <- hurr.obs %>%
 		filter(storm.id == id)
 	storm <- wanted.storm$storm.name
@@ -88,6 +101,7 @@ track_storm_by_id <- function(id){
 		geom_line(linetype="dotted") +
 		geom_point(aes(colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
-												", PDI = ", scientific(get_pdi_by_id(id), digits = 3), " m^3/s^2"),
+												", PDI = ", scientific(get_pdi_by_id(hurr.all.pdi, id), digits = 3), " m^3/s^2"),
 				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")
 }
+
