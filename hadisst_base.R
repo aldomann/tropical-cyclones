@@ -102,7 +102,7 @@ plot_annual_sst <- function(data.df, save = F, pdf = F, lmodern = F){
 	# Save into image/PDF (optional)
 	if (save == T) {
 		save.title <- deparse(substitute(data.df))
-		save.title <- substr(save.title, 1, nchar(save.title)-8)
+		save.title <- substr(save.title, 6, nchar(save.title))
 		save.title <- toupper(save.title)
 		if (pdf == T) {
 			ggsave(filename = paste0("SSTs", "-", save.title, "-", years.str, ".pdf"),
