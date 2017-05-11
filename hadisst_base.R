@@ -53,29 +53,6 @@ get_mean_ssts <- function(x = hadsst.raster, years, range = 1:12,
 	return(mean.df)
 }
 
-# Get mean SSTs (Alt) for ranges within two years
-get_mean_ssts2 <- function(x = hadsst.raster, years, first.range, second.range,
-													 coords = c("180W", "180E", "90S", "90N")){
-	coords <- morph_coords(coords)
-	aoi <- extent(as.numeric(coords))
-	nms <- names(x)
-	x <- crop(x, aoi)
-
-	months <- c("01","02","03","04","05","06","07","08","09","10","11","12")
-	xMeans <- vector(length = length(years)-1, mode = 'list')
-	for (ix in 2:length(years)){
-		xMeans[[ix-1]] <- mean(x[[c(sapply(first.range,function(x) grep(paste0(years[ix-1],'.',months[x]),nms)),
-																sapply(1:4,function(x) grep(paste0(years[ix],'.',months[x]),nms)))]], na.rm = T)
-	}
-	mean.brick <- do.call(brick,xMeans)
-	mean.brick <- lapply(1:nlayers(mean.brick),function(ix) mean(as.matrix(mean.brick[[ix]]), na.rm = T))
-
-	mean.df <- unlist(mean.brick)
-	mean.df <- data.frame(sst = mean.df)
-	mean.df <- normalise_ssts(mean.df, years)
-	return(mean.df)
-}
-
 # Normalise SSTs and divide by class
 normalise_ssts <- function(data.df, years){
 	mean.sst <- mean(data.df$sst)
@@ -101,7 +78,7 @@ get_high_years <- function(data.df) {
 # Data visualisation functions -----------------------------
 
 # Plot time series
-library(extrafont)
+# library(extrafont)
 # font_import(paths = "~/TTF") # Only once
 plot_annual_sst <- function(data.df, save = F, pdf = F, lmodern = F){
 	title <- attr(data.df, "title")
