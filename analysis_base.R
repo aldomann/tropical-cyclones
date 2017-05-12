@@ -1,6 +1,9 @@
 # Base code with misc functions needed in main_analysis
 # Author: Alfredo Hernández <aldomann.designs@gmail.com>
 
+library(maps)
+library(ggalt)
+
 # Data visualisation functions -----------------------------
 
 # Function to plot the DPDI data frame
@@ -30,6 +33,9 @@ plot_dpdi_by_sst_class <- function(hurr.obs.pdi, ssts.df){
 		theme(legend.position = c(0.92, 0.85))
 }
 
+# Map showing the hurricanes in specified window
+
+# SRC: http://stackoverflow.com/questions/33302424/format-latitude-and-longitude-axis-labels-in-ggplot
 scale_x_longitude <- function(xmin=-180, xmax=180, step=1, ...) {
 	xbreaks <- seq(xmin,xmax,step)
 	xlabels <- unlist(lapply(xbreaks, function(x) ifelse(x < 0, parse(text=paste0(x,"^o", "*W")),
@@ -47,17 +53,11 @@ scale_y_latitude <- function(ymin=-90, ymax=90, step=0.5, ...) {
 }
 
 map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5)){
-	library(maps)
-	library(ggalt)
-
 	coords <- morph_coords(coords)
-
 	hurr.obs <- hurr.obs %>%
 		filter(storm.year %in% years)
-
 	world_map <- map_data("world")
 	world_map <- subset(world_map, region!="Antarctica")
-
 	map <- ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
 		geom_cartogram(map = world_map, aes(map_id = region)) +
 		# scale_x_continuous(expand = c(0,0), limits = c(as.numeric(coords[1]), as.numeric(coords[2]))) +
@@ -68,6 +68,5 @@ map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5)){
 		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2) #+
 		# labs(title = "asd", x = "Longitude", y = "Latitude")
-
 	return(map)
 }
