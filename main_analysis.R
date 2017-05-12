@@ -5,8 +5,6 @@
 source("hadisst_base.R")
 source("hurdat2_pdi_base.R")
 
-hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst.nc")
-
 # Functions ------------------------------------------------
 
 # Function to plot the DPDI data frame
@@ -37,12 +35,19 @@ plot_dpdi_by_sst_class <- function(hurr.obs.pdi, ssts.df){
 
 # Create PDI data frame ------------------------------------
 
+# Get hurricanes data frames
+hurr.natl.obs <- get_hurr_obs("hurdat2-1851-2016-apr2017.txt")
+hurr.epac.obs <- get_hurr_obs("hurdat2-nepac-1949-2016-apr2017.txt")
+hurr.all.obs <- rbind(hurr.natl.obs, hurr.epac.obs)
+
 # Create data frame with PDI and year of the storm
 hurr.natl.pdi <- get_pdis(hurr.natl.obs)
 hurr.epac.pdi <- get_pdis(hurr.epac.obs)
 hurr.all.pdi <- get_pdis(hurr.all.obs)
 
 # Create SST data frames -----------------------------------
+
+hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst.nc")
 
 # Windows of activity
 years.natl <- 1966:2016
@@ -66,13 +71,13 @@ attr(ssts.epac, "title") <- "E. Pac."
 # years.high.epac <- get_high_years(ssts.natl)
 
 # Get number of years per SST class
-# table(ssts.natl$sst.class)
-# table(ssts.epac$sst.class)
+table(ssts.natl$sst.class)
+table(ssts.epac$sst.class)
 
 # Data visualisation ---------------------------------------
 
-plot_annual_sst(ssts.natl, save = T)
-plot_annual_sst(ssts.epac, save = T)
+plot_annual_sst(ssts.natl)
+plot_annual_sst(ssts.epac)
 # plot_annual_sst(ssts.epac, save = T, pdf = T, lmodern = T)
 
 # DPDI plots by SST class ----------------------------------

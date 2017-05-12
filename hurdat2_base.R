@@ -5,8 +5,11 @@ library(tidyverse)
 library(stringr) # To split lines
 library(lubridate) # Use dates
 
+
+# Get hurricane observations data frame --------------------
+
 get_hurr_obs <- function(filename){
-	# Read and split raw data --------------------------------------------
+	# Read and split raw data ----------------------------------
 
 	# tracks.url <- paste0("http://www.aoml.noaa.gov/hrd/hurdat/", "hurdat2-nepac-1949-2016-apr2017.txt")
 	# tracks.url <- paste0("http://www.aoml.noaa.gov/hrd/hurdat/", "hurdat2-1851-2016-apr2017.txt")
@@ -15,7 +18,7 @@ get_hurr_obs <- function(filename){
 	hurr.tracks <- readLines(tracks.file)
 	hurr.tracks <- lapply(hurr.tracks, str_split, pattern = ",", simplify = TRUE)
 
-	# Clean the raw data -------------------------------------------------
+	# Clean the raw data ---------------------------------------
 
 	# Split the hurr.tracks into meta and observation lists
 	hurr.lengths <- sapply(hurr.tracks, length)
@@ -81,20 +84,31 @@ get_hurr_obs <- function(filename){
 					 long.dir = str_extract(long, "[A-Z]"),
 					 long = as.numeric(str_extract(long, "[^A-Z]+")))
 
+	# Clean non-standard data ----------------------------------
+
+	# Ignore data outside the delta.t = 6 hours
+	hurr.obs <- hurr.obs %>%
+		filter(hour(date.time) == 00 |
+					 	hour(date.time) == 06 |
+					 	hour(date.time) == 12 |
+					 	hour(date.time) == 18) %>%
+		filter(minute(date.time) == 00)
+
 	# Clean up wind column -------------------------------------
 
 	# Manually change odd middle values for AL191976 & AL111973
 	hurr.obs <- hurr.obs %>%
 		mutate(wind = ifelse(storm.id == "AL191976" & wind == " -99", 20, wind),
 					 wind = ifelse(storm.id == "AL111973" & wind == " -99", 30, wind),
-					 wind = ifelse(storm.id == "AL111973" & month(date.time) == 9 & day(date.time) == 12 & hour(date.time) == 12, NA, wind)) %>%
+					 wind = ifelse(storm.id == "AL111973" & month(date.time) == 9 &
+					 								day(date.time) == 12 & hour(date.time) == 12, NA, wind)) %>%
 		filter(is.na(wind) != TRUE)
 
 	# Clean and reformat the wind column
 	hurr.obs <- hurr.obs %>%
 		mutate(wind = ifelse(wind == " -99", NA, as.numeric(wind)))
 
-	# Add useful info to hurr.obs data frame --------------------
+	# Add useful info to data frame ----------------------------
 
 	# Add category 5 hurricanes boolean
 	# hurr.obs <- hurr.obs %>%
@@ -107,14 +121,6 @@ get_hurr_obs <- function(filename){
 		left_join(hurr.meta, by = "storm.id") %>%
 		mutate(storm.year = year(date.time))
 
-	# Ignore data outside the delta.t = 6 hours
-	hurr.obs <- hurr.obs %>%
-		filter(hour(date.time) == 00 |
-					 	hour(date.time) == 06 |
-					 	hour(date.time) == 12 |
-					 	hour(date.time) == 18) %>%
-		filter(minute(date.time) == 00)
-
 	# Recalculate n.obs
 	hurr.obs <- hurr.obs %>%
 		group_by(storm.id) %>%
@@ -122,8 +128,8 @@ get_hurr_obs <- function(filename){
 
 	# Rearrange hurr.obs data frame columns
 	hurr.obs <- hurr.obs[c("storm.id", "storm.name", "n.obs", "date.time", "status",
-																	 "lat", "lat.dir", "lat.num", "long", "long.dir", "long.num",
-																	 "wind", "storm.year")]
+												 "lat", "lat.dir", "lat.num", "long", "long.dir", "long.num",
+												 "wind", "storm.year")]
 	# Unused variables
 	# 	"delta.t" after "date.time"
 	# 	"cat.5" after "wind"
@@ -131,9 +137,3 @@ get_hurr_obs <- function(filename){
 
 	return(hurr.obs)
 }
-
-# Get hurricanes data frames -------------------------------
-
-hurr.natl.obs <- get_hurr_obs("hurdat2-1851-2016-apr2017.txt")
-hurr.epac.obs <- get_hurr_obs("hurdat2-nepac-1949-2016-apr2017.txt")
-hurr.all.obs <- rbind(hurr.natl.obs, hurr.epac.obs)
