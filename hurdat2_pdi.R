@@ -12,10 +12,10 @@ hurr.all.pdi <- get_pdis(hurr.all.obs)
 
 # Data visualisation -------------------------------------------------
 
-test.dpdi <- get_dpdi(hurr.natl.pdi, 2004:2007)
+# test.dpdi <- get_dpdi(hurr.natl.pdi, 2004:2007)
 plot_dpdi(hurr.all.pdi, 2004:2007)
 
-get_pdi(hurr.natl.pdi, "katrina", 2005)
+#get_pdi(hurr.natl.pdi, "katrina", 2005)
 track_storm(hurr.natl.obs, "Katrina", 2005)
-track_storm(hurr.natl.obs, "Betsy", "1956")
-track_storm_by_id(hurr.natl.obs, "AL191976")
+#track_storm(hurr.natl.obs, "Betsy", "1956")
+#track_storm_by_id(hurr.natl.obs, "AL191976")

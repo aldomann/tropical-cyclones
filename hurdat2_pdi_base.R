@@ -1,9 +1,7 @@
 # Base code to study the PDI probability density (DPDI)
 # Author: Alfredo Hernández <aldomann.designs@gmail.com>
 
-source("hurdat2_natl_base.R")
-source("hurdat2_epac_base.R")
-hurr.all.obs <- rbind(hurr.natl.obs, hurr.epac.obs)
+source("hurdat2_base.R")
 
 library(measurements) # Convert units
 library(scales) # To show exponents
