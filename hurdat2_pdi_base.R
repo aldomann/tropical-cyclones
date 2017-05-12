@@ -11,7 +11,7 @@ library(scales) # To show exponents
 # Calculate the PDI ----------------------------------------
 
 # Create data frame with PDI and year of the storm
-get_pdi_df <- function(hurr.obs){
+get_pdis <- function(hurr.obs){
 	hurr.obs.pdi <- hurr.obs %>%
 		group_by(storm.id, storm.name, n.obs) %>%
 		summarise(storm.pdi = sum(conv_unit(wind, "knot", "m_per_sec")^3 * conv_unit(6, "hr", "sec"))) %>%

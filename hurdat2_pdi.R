@@ -6,9 +6,9 @@ source("hurdat2_pdi_base.R")
 # Calculate the PDI ----------------------------------------
 
 # Create data frame with PDI and year of the storm
-hurr.natl.pdi <- get_pdi_df(hurr.natl.obs)
-hurr.epac.pdi <- get_pdi_df(hurr.epac.obs)
-hurr.all.pdi <- get_pdi_df(hurr.all.obs)
+hurr.natl.pdi <- get_pdis(hurr.natl.obs)
+hurr.epac.pdi <- get_pdis(hurr.epac.obs)
+hurr.all.pdi <- get_pdis(hurr.all.obs)
 
 # Data visualisation -------------------------------------------------
 
