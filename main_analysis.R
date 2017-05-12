@@ -58,5 +58,5 @@ plot_annual_sst(ssts.epac)
 plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl)
 plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
 
-map_region_hurrs(hurr.natl.obs, years.natl, c("100W", "20E", "10N", "40N"))
+map_region_hurrs(hurr.natl.obs, years.natl, c("100W", "20E", "10N", "40N"), steps = c(20, 10))
 map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)

@@ -26,10 +26,27 @@ plot_dpdi_by_sst_class <- function(hurr.obs.pdi, ssts.df){
 		labs(title = paste0("PDI probability density for ",
 												years[1], "-", years[length(years)],
 												" (", attr(ssts.df, "title"), ")"),
-				 x = "PDI (m^3/s^2)", y = "D(PDI) (s^2/m^3)", colour = "SST Class")
+				 x = "PDI (m^3/s^2)", y = "D(PDI) (s^2/m^3)", colour = "SST Class") +
+		theme(legend.position = c(0.92, 0.85))
 }
 
-map_region_hurrs <- function(hurr.obs, years, coords){
+scale_x_longitude <- function(xmin=-180, xmax=180, step=1, ...) {
+	xbreaks <- seq(xmin,xmax,step)
+	xlabels <- unlist(lapply(xbreaks, function(x) ifelse(x < 0, parse(text=paste0(x,"^o", "*W")),
+																											 ifelse(x > 0, parse(text=paste0(x,"^o", "*E")), x))))
+	return(scale_x_continuous("Longitude", breaks = xbreaks, labels = xlabels,
+														expand = c(0, 0.05), limits = c(xmin, xmax), ...))
+}
+
+scale_y_latitude <- function(ymin=-90, ymax=90, step=0.5, ...) {
+	ybreaks <- seq(ymin,ymax,step)
+	ylabels <- unlist(lapply(ybreaks, function(x) ifelse(x < 0, parse(text=paste0(x,"^o", "*S")),
+																											 ifelse(x > 0, parse(text=paste0(x,"^o", "*N")), x))))
+	return(scale_y_continuous("Latitude", breaks = ybreaks, labels = ylabels,
+														expand = c(0, 0.05), limits = c(ymin, ymax), ...))
+}
+
+map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5)){
 	library(maps)
 	library(ggalt)
 
@@ -43,13 +60,14 @@ map_region_hurrs <- function(hurr.obs, years, coords){
 
 	map <- ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
 		geom_cartogram(map = world_map, aes(map_id = region)) +
-		# xlim(c(as.numeric(coords[1]), as.numeric(coords[2]))) +
-		# ylim(c(as.numeric(coords[3]), as.numeric(coords[4]))) +
-		scale_x_continuous(expand = c(0,0), limits = c(as.numeric(coords[1]), as.numeric(coords[2]))) +
-		scale_y_continuous(expand = c(0,0), limits = c(as.numeric(coords[3]),as.numeric(coords[4]))) +
+		# scale_x_continuous(expand = c(0,0), limits = c(as.numeric(coords[1]), as.numeric(coords[2]))) +
+		# scale_y_continuous(expand = c(0,0), limits = c(as.numeric(coords[3]),as.numeric(coords[4]))) +
+		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]), step = steps[1]) +
+		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]), step = steps[2]) +
 		coord_trans() +
 		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
-							color = "red", alpha = 0.2, size = 0.2)
+							color = "red", alpha = 0.2, size = 0.2) #+
+		# labs(title = "asd", x = "Longitude", y = "Latitude")
 
 	return(map)
 }
