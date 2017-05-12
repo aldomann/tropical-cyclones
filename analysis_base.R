@@ -38,7 +38,7 @@ plot_dpdi_by_sst_class <- function(hurr.obs.pdi, ssts.df){
 # SRC: http://stackoverflow.com/questions/33302424/format-latitude-and-longitude-axis-labels-in-ggplot
 scale_x_longitude <- function(xmin=-180, xmax=180, step=1, ...) {
 	xbreaks <- seq(xmin,xmax,step)
-	xlabels <- unlist(lapply(xbreaks, function(x) ifelse(x < 0, parse(text=paste0(x,"^o", "*W")),
+	xlabels <- unlist(lapply(xbreaks, function(x) ifelse(x < 0, parse(text=paste0(-x,"^o", "*W")),
 																											 ifelse(x > 0, parse(text=paste0(x,"^o", "*E")), x))))
 	return(scale_x_continuous("Longitude", breaks = xbreaks, labels = xlabels,
 														expand = c(0, 0.05), limits = c(xmin, xmax), ...))
@@ -46,7 +46,7 @@ scale_x_longitude <- function(xmin=-180, xmax=180, step=1, ...) {
 
 scale_y_latitude <- function(ymin=-90, ymax=90, step=0.5, ...) {
 	ybreaks <- seq(ymin,ymax,step)
-	ylabels <- unlist(lapply(ybreaks, function(x) ifelse(x < 0, parse(text=paste0(x,"^o", "*S")),
+	ylabels <- unlist(lapply(ybreaks, function(x) ifelse(x < 0, parse(text=paste0(-x,"^o", "*S")),
 																											 ifelse(x > 0, parse(text=paste0(x,"^o", "*N")), x))))
 	return(scale_y_continuous("Latitude", breaks = ybreaks, labels = ylabels,
 														expand = c(0, 0.05), limits = c(ymin, ymax), ...))
