@@ -36,23 +36,23 @@ plot_dpdi_by_sst_class <- function(hurr.obs.pdi, ssts.df){
 # Map showing the hurricanes in specified window
 
 # SRC: http://stackoverflow.com/questions/33302424/format-latitude-and-longitude-axis-labels-in-ggplot
-scale_x_longitude <- function(xmin=-180, xmax=180, step=1, ...) {
+scale_x_longitude <- function(xmin = -180, xmax = 180, step = 1, xtra.lim = 1.5, ...) {
 	xbreaks <- seq(xmin,xmax,step)
 	xlabels <- unlist(lapply(xbreaks, function(x) ifelse(x < 0, parse(text=paste0(-x,"^o", "*W")),
 																											 ifelse(x > 0, parse(text=paste0(x,"^o", "*E")), x))))
 	return(scale_x_continuous("Longitude", breaks = xbreaks, labels = xlabels,
-														expand = c(0, 0), limits = c(xmin-1.5, xmax+1.5), ...))
+														expand = c(0, 0), limits = c(xmin-xtra.lim, xmax+xtra.lim), ...))
 }
 
-scale_y_latitude <- function(ymin=-90, ymax=90, step=0.5, ...) {
+scale_y_latitude <- function(ymin = -90, ymax = 90, step = 0.5, xtra.lim = 1.5, ...) {
 	ybreaks <- seq(ymin,ymax,step)
 	ylabels <- unlist(lapply(ybreaks, function(x) ifelse(x < 0, parse(text=paste0(-x,"^o", "*S")),
 																											 ifelse(x > 0, parse(text=paste0(x,"^o", "*N")), x))))
 	return(scale_y_continuous("Latitude", breaks = ybreaks, labels = ylabels,
-														expand = c(0, 0), limits = c(ymin-1.5, ymax+1.5), ...))
+														expand = c(0, 0), limits = c(ymin-xtra.lim, ymax+xtra.lim), ...))
 }
 
-map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5)){
+map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5), xtra.lims = c(1.5,1.5)){
 	coords <- morph_coords(coords)
 	hurr.obs <- hurr.obs %>%
 		filter(storm.year %in% years)
@@ -64,8 +64,8 @@ map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5)){
 
 	map <- ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
 		geom_cartogram(map = world_map, aes(map_id = region)) +
-		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]), step = steps[1]) +
-		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]), step = steps[2]) +
+		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]), step = steps[1], xtra.lim = xtra.lims[1]) +
+		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]), step = steps[2], xtra.lim = xtra.lims[2]) +
 		coord_trans() +
 		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2)
