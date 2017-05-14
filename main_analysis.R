@@ -23,8 +23,9 @@ hurr.all.pdi <- get_pdis(hurr.all.obs)
 hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst.nc")
 
 # Windows of activity
-years.natl <- 1966:2016
+years.natl <- 1966:2007
 coords.natl <- c("90W", "20E", "5N", "25N")
+coords.natl.map <- c("100W", "20E", "10N", "60N")
 
 years.epac <- 1966:2016
 coords.epac <- c("120W", "90W", "5N", "20N")
@@ -58,5 +59,5 @@ plot_annual_sst(ssts.epac)
 plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl)
 plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
 
-map_region_hurrs(hurr.natl.obs, years.natl, c("100W", "20E", "10N", "40N"), steps = c(20, 10))
+map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10))
 map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
