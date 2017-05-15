@@ -15,7 +15,9 @@ hurr.all.obs <- rbind(hurr.natl.obs, hurr.epac.obs)
 
 # Create data frame with PDI and year of the storm
 hurr.natl.pdi <- get_pdis(hurr.natl.obs)
+attr(hurr.natl.pdi, "title") <- "N. Atl."
 hurr.epac.pdi <- get_pdis(hurr.epac.obs)
+attr(hurr.epac.pdi, "title") <- "E. Pac."
 hurr.all.pdi <- get_pdis(hurr.all.obs)
 
 # Create SST data frames -----------------------------------
@@ -107,3 +109,25 @@ plot_maxwind_scatter <- function(hurr.pdi, ssts){
 
 plot_maxwind_scatter(hurr.natl.pdi, ssts.natl)
 plot_maxwind_scatter(hurr.epac.pdi, ssts.epac)
+
+
+# PDI Time series ------------------------------------------
+
+plot_pdi_tempseries <- function(hurr.pdi, years){
+	hurr.pdi.new <- hurr.pdi %>%
+		filter(storm.year %in% years) %>%
+		group_by(storm.year) %>%
+		summarise(mean.pdi = mean(storm.pdi))
+	gg <- ggplot(hurr.pdi.new, aes(x = as.Date(paste(storm.year, "01", "01", sep = "-")), y = mean.pdi, group = 1)) +
+		geom_point()+
+		geom_line() +
+		labs(title = paste0("PDI Time series", " (", attr(hurr.epac.pdi, "title"), "; ",
+												years[1], "-", years[length(years)] ,")"),
+				 x = "Time (year)", y = "Mean year PDI" )
+	ggsave(filename = "asd.pdf",
+				 width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
+	gg
+}
+
+plot_pdi_tempseries(hurr.natl.pdi, years.natl)
+plot_pdi_tempseries(hurr.epac.pdi, years.epac)
