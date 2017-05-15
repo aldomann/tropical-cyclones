@@ -77,6 +77,8 @@ plot_pdi_scatter <- function(hurr.pdi, ssts){
 		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.3) +
 		geom_smooth(data = hurr.low.pdi, aes(colour = "low"), method = glm, size = 0.4) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		scale_x_log10() +
+		scale_y_log10() +
 		labs(title = paste0("PDI Scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")"),
 				 x = "Storm duration (h)", y = "PDI (m^3/s^2)", colour = "SST Class")
 }
@@ -97,6 +99,8 @@ plot_maxwind_scatter <- function(hurr.pdi, ssts){
 		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.3) +
 		geom_smooth(data = hurr.low.pdi, aes(colour = "low"), method = glm, size = 0.4) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		scale_x_log10() +
+		scale_y_log10() +
 		labs(title = paste0("Wind Scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")"),
 				 x = "Storm duration (h)", y = "Max wind (knot)", colour = "SST Class")
 }
