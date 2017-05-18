@@ -64,21 +64,65 @@ plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
 map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
 map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
 
+# PDI Time series ------------------------------------------
+
+plot_pdi_tempseries <- function(hurr.pdi, ssts){
+	hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts))
+	hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts))
+	years.str <- paste0(year(ssts$year[1]), "-", year(ssts$year[length(ssts$year)]))
+
+	gg <- ggplot() +
+		aes(x = as.Date(paste(storm.year, "01", "01", sep = "-")), y = storm.pdi, group = 1) +
+		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.5)+
+		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.5)+
+		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		scale_y_log10() +
+		labs(title = paste0("PDI Time series", " (", attr(ssts, "title"), "; ", years.str, ")"),
+				 x = "Time (year)", y = "PDI (m^3/s^2)", colour = "SST Class" )
+	# ggsave(filename = "asd.pdf",
+	# 			 width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
+	gg
+}
+
+plot_pdi_tempseries(hurr.natl.pdi, ssts.natl)
+plot_pdi_tempseries(hurr.epac.pdi, ssts.epac)
+
+# Get summary of cyclone status
+table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
+
 # New analysis ---------------------------------------------
 
 # PDI scatterplots
 plot_pdi_scatter <- function(hurr.pdi, ssts){
 	hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts))
 	hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts))
+
+	lm.high.y <- lm(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.high.pdi)
+	lm.low.y <- lm(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.low.pdi)
+	lm.high.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(storm.pdi), data = hurr.high.pdi)
+	lm.low.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(storm.pdi), data = hurr.low.pdi)
+
 	years.str <- paste0(year(ssts$year[1]), "-", year(ssts$year[length(ssts$year)]))
 
 	ggplot() +
 		aes(x = conv_unit(storm.duration, "sec", "hr"), y = storm.pdi) +
 		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.3) +
-		geom_smooth(data = hurr.high.pdi, aes(colour = "high"), method = glm, size = 0.4) +
 		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.3) +
-		geom_smooth(data = hurr.low.pdi, aes(colour = "low"), method = glm, size = 0.4) +
-		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		# geom_smooth(data = hurr.high.pdi, aes(colour = "high"), method = lm, formula=y~x, se = F, size = 0.4) +
+		# geom_smooth(data = hurr.low.pdi, aes(colour = "low"), method = lm, formula=y~x, se = F, size = 0.4) +
+		# scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		geom_abline(aes(slope = coef(lm.high.y)[[2]], intercept = coef(lm.high.y)[[1]],
+										colour = "high.y~x"), linetype = "twodash") +
+		geom_abline(aes(slope = coef(lm.low.y)[[2]], intercept = coef(lm.low.y)[[1]],
+										colour = "low.y~x"), linetype = "twodash") +
+		geom_abline(aes(slope = 1/coef(lm.high.x)[[2]], intercept = -coef(lm.high.x)[[1]]/coef(lm.high.x)[[2]],
+										colour = "high.x~y"), linetype = "twodash") +
+		geom_abline(aes(slope = 1/coef(lm.low.x)[[2]], intercept = -coef(lm.low.x)[[1]]/coef(lm.low.x)[[2]],
+										colour = "low.x~y"), linetype = "twodash") +
+		scale_colour_manual(values = c("high" = "brown1", "low" = "dodgerblue1",
+																	 "high.y~x" = "red", "low.y~x" = "blue",
+																	 "high.x~y" = "darkviolet", "low.x~y" = "green")) +
+		guides(color=guide_legend(override.aes = list(linetype = c(0,4,4,0,4,4)))) +
 		scale_x_log10() +
 		scale_y_log10() +
 		labs(title = paste0("PDI Scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")"),
@@ -87,47 +131,3 @@ plot_pdi_scatter <- function(hurr.pdi, ssts){
 
 plot_pdi_scatter(hurr.natl.pdi, ssts.natl)
 plot_pdi_scatter(hurr.epac.pdi, ssts.epac)
-
-# Max wind scatterplots
-plot_maxwind_scatter <- function(hurr.pdi, ssts){
-	hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts))
-	hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts))
-	years.str <- paste0(year(ssts$year[1]), "-", year(ssts$year[length(ssts$year)]))
-
-	ggplot() +
-		aes(x = conv_unit(storm.duration, "sec", "hr"), y = max.wind) +
-		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.3) +
-		geom_smooth(data = hurr.high.pdi, aes(colour = "high"), method = glm, size = 0.4) +
-		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.3) +
-		geom_smooth(data = hurr.low.pdi, aes(colour = "low"), method = glm, size = 0.4) +
-		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
-		scale_x_log10() +
-		scale_y_log10() +
-		labs(title = paste0("Wind Scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")"),
-				 x = "Storm duration (h)", y = "Max wind (knot)", colour = "SST Class")
-}
-
-plot_maxwind_scatter(hurr.natl.pdi, ssts.natl)
-plot_maxwind_scatter(hurr.epac.pdi, ssts.epac)
-
-
-# PDI Time series ------------------------------------------
-
-plot_pdi_tempseries <- function(hurr.pdi, years){
-	hurr.pdi.new <- hurr.pdi %>%
-		filter(storm.year %in% years) %>%
-		group_by(storm.year) %>%
-		summarise(mean.pdi = mean(storm.pdi))
-	gg <- ggplot(hurr.pdi.new, aes(x = as.Date(paste(storm.year, "01", "01", sep = "-")), y = mean.pdi, group = 1)) +
-		geom_point()+
-		geom_line() +
-		labs(title = paste0("PDI Time series", " (", attr(hurr.epac.pdi, "title"), "; ",
-												years[1], "-", years[length(years)] ,")"),
-				 x = "Time (year)", y = "Mean year PDI" )
-	ggsave(filename = "asd.pdf",
-				 width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
-	gg
-}
-
-plot_pdi_tempseries(hurr.natl.pdi, years.natl)
-plot_pdi_tempseries(hurr.epac.pdi, years.epac)
