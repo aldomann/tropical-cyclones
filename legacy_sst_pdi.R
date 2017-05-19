@@ -51,3 +51,23 @@ ggplot() +
 	scale_y_log10() +
 	labs(title = paste0("PDI Scatterplot", " (N. ATl; 1966-2007)"),
 			 x = "Storm duration (h)", y = "PDI (m^3/s^2)", colour = "SST Class")
+
+# Comparison with new data ---------------------------------
+
+hurr.high.pdi <- hurr.natl.pdi %>% filter(storm.year %in% get_high_years(ssts.natl))
+hurr.low.pdi <- hurr.natl.pdi %>% filter(storm.year %in% get_low_years(ssts.natl))
+
+ggplot() +
+	aes(x = storm.duration, y = storm.pdi) +
+	# geom_point(data = hurr.high.pdi, aes(x = conv_unit(storm.duration, "sec", "hr"), colour = "high"), size = 0.9) +
+	geom_point(data = hurr.low.pdi, aes(x = conv_unit(storm.duration, "sec", "hr"), colour = "low"), size = 0.9) +
+	# geom_point(data = legacy.dat.high, aes(colour = "high.legacy"), size = 0.3) +
+	geom_point(data = legacy.dat.low, aes(colour = "low.legacy"), size = 0.3) +
+	scale_colour_manual(values = c("high.legacy" = "brown1", "low.legacy" = "dodgerblue1",
+																 "high" = "darkviolet", "low" = "green")) +
+	# guides(color=guide_legend(override.aes = list(linetype = c(0,4,4,0,4,4)))) +
+	scale_x_log10() +
+	scale_y_log10() +
+	labs(title = paste0("PDI Scatterplot", " (N. ATl; 1966-2007)"),
+			 x = "Storm duration (h)", y = "PDI (m^3/s^2)", colour = "SST Class")
+
