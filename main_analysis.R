@@ -25,12 +25,13 @@ hurr.all.pdi <- get_pdis(hurr.all.obs)
 hadsst.raster <- load_hadsst(file = "data/HadISST_sst.nc")
 
 # Windows of activity
-years.natl <- 1966:2016
+years.natl <- 1966:2007
 coords.natl <- c("90W", "20E", "5N", "25N")
-coords.natl.map <- c("100W", "20E", "10N", "60N")
+coords.natl.map <- c("100W", "20E", "5N", "60N")
 
-years.epac <- 1966:2016
+years.epac <- 1966:2007
 coords.epac <- c("120W", "90W", "5N", "20N")
+coords.epac.map <- c("160W", "90W", "5N", "35N")
 
 # Construct SST data frames
 ssts.natl <- get_mean_ssts(years = years.natl, coords = coords.natl)
@@ -42,7 +43,6 @@ attr(ssts.epac, "title") <- "E. Pac."
 # Create vector of low & high SST years
 # years.low.natl <- get_low_years(ssts.natl)
 # years.high.natl <- get_high_years(ssts.natl)
-#
 # years.low.epac <- get_low_years(ssts.natl)
 # years.high.epac <- get_high_years(ssts.natl)
 
@@ -63,6 +63,9 @@ plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
 
 map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
 map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
+
+map_region_hurrs2(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))
+map_region_hurrs2(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))
 
 # PDI Time series ------------------------------------------
 
@@ -101,6 +104,10 @@ plot_pdi_scatter <- function(hurr.pdi, ssts){
 	lm.low.y <- lm(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.low.pdi)
 	lm.high.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(storm.pdi), data = hurr.high.pdi)
 	lm.low.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(storm.pdi), data = hurr.low.pdi)
+	# print(summary(lm.high.y))
+	# print(summary(lm.low.y))
+	# print(summary(lm.high.x))
+	# print(summary(lm.low.x))
 
 	years.str <- paste0(year(ssts$year[1]), "-", year(ssts$year[length(ssts$year)]))
 
@@ -108,8 +115,6 @@ plot_pdi_scatter <- function(hurr.pdi, ssts){
 		aes(x = conv_unit(storm.duration, "sec", "hr"), y = storm.pdi) +
 		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.3) +
 		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.3) +
-		# geom_smooth(data = hurr.high.pdi, aes(colour = "high"), method = lm, formula=y~x, se = F, size = 0.4) +
-		# geom_smooth(data = hurr.low.pdi, aes(colour = "low"), method = lm, formula=y~x, se = F, size = 0.4) +
 		# scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		geom_abline(aes(slope = coef(lm.high.y)[[2]], intercept = coef(lm.high.y)[[1]],
 										colour = "high.y~x"), linetype = "twodash") +
@@ -130,4 +135,4 @@ plot_pdi_scatter <- function(hurr.pdi, ssts){
 }
 
 plot_pdi_scatter(hurr.natl.pdi, ssts.natl)
-plot_pdi_scatter(hurr.epac.pdi, ssts.epac)
+# plot_pdi_scatter(hurr.epac.pdi, ssts.epac)
