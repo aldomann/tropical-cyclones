@@ -25,11 +25,11 @@ hurr.all.pdi <- get_pdis(hurr.all.obs)
 hadsst.raster <- load_hadsst(file = "data/HadISST_sst.nc")
 
 # Windows of activity
-years.natl <- 1966:2007
+years.natl <- 1966:2016
 coords.natl <- c("90W", "20E", "5N", "25N")
 coords.natl.map <- c("100W", "20E", "5N", "60N")
 
-years.epac <- 1966:2007
+years.epac <- 1966:2006
 coords.epac <- c("120W", "90W", "5N", "20N")
 coords.epac.map <- c("160W", "90W", "5N", "35N")
 
@@ -52,20 +52,22 @@ table(ssts.epac$sst.class)
 
 # Data visualisation ---------------------------------------
 
+# Plot annual SSTs
 plot_annual_sst(ssts.natl)
 plot_annual_sst(ssts.epac)
 # plot_annual_sst(ssts.epac, save = T, pdf = T, lmodern = T)
 
-# DPDI plots by SST class ----------------------------------
-
+# DPDI plots by SST class
 plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl)
 plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
 
-map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
-map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
+# Maps of the basins
+# map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
+# map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
 
-map_region_hurrs2(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))
-map_region_hurrs2(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))
+# map_region_hurrs2(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))
+# map_region_hurrs2(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))
+
 
 # PDI Time series ------------------------------------------
 
@@ -95,6 +97,8 @@ table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
 
 # New analysis ---------------------------------------------
 
+library(RVAideMemoire)
+
 # PDI scatterplots
 plot_pdi_scatter <- function(hurr.pdi, ssts){
 	hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts))
@@ -104,10 +108,8 @@ plot_pdi_scatter <- function(hurr.pdi, ssts){
 	lm.low.y <- lm(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.low.pdi)
 	lm.high.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(storm.pdi), data = hurr.high.pdi)
 	lm.low.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(storm.pdi), data = hurr.low.pdi)
-	# print(summary(lm.high.y))
-	# print(summary(lm.low.y))
-	# print(summary(lm.high.x))
-	# print(summary(lm.low.x))
+	lm.lr.high <- least.rect(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.high.pdi)
+	lm.lr.low <- least.rect(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.low.pdi)
 
 	years.str <- paste0(year(ssts$year[1]), "-", year(ssts$year[length(ssts$year)]))
 
@@ -115,24 +117,35 @@ plot_pdi_scatter <- function(hurr.pdi, ssts){
 		aes(x = conv_unit(storm.duration, "sec", "hr"), y = storm.pdi) +
 		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.3) +
 		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.3) +
-		# scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		geom_abline(aes(slope = coef(lm.high.y)[[2]], intercept = coef(lm.high.y)[[1]],
 										colour = "high.y~x"), linetype = "twodash") +
 		geom_abline(aes(slope = coef(lm.low.y)[[2]], intercept = coef(lm.low.y)[[1]],
 										colour = "low.y~x"), linetype = "twodash") +
 		geom_abline(aes(slope = 1/coef(lm.high.x)[[2]], intercept = -coef(lm.high.x)[[1]]/coef(lm.high.x)[[2]],
-										colour = "high.x~y"), linetype = "twodash") +
+		colour = "high.x~y"), linetype = "twodash") +
 		geom_abline(aes(slope = 1/coef(lm.low.x)[[2]], intercept = -coef(lm.low.x)[[1]]/coef(lm.low.x)[[2]],
-										colour = "low.x~y"), linetype = "twodash") +
+		colour = "low.x~y"), linetype = "twodash") +
+		geom_abline(aes(slope = coef(lm.lr.high)[[2]], intercept = coef(lm.lr.high)[[1]],
+										colour = "high.lr"), linetype = "twodash") +
+		geom_abline(aes(slope = coef(lm.lr.low)[[2]], intercept = coef(lm.lr.low)[[1]],
+										colour = "low.lr"), linetype = "twodash") +
 		scale_colour_manual(values = c("high" = "brown1", "low" = "dodgerblue1",
 																	 "high.y~x" = "red", "low.y~x" = "blue",
-																	 "high.x~y" = "darkviolet", "low.x~y" = "green")) +
-		guides(color=guide_legend(override.aes = list(linetype = c(0,4,4,0,4,4)))) +
+																	 "high.x~y" = "darkviolet", "low.x~y" = "green",
+																	 "high.lr" = "orange", "low.lr" = "darkblue")) +
+		guides(color=guide_legend(override.aes = list(linetype = c(0,4,4,4,0,4,4,4)))) +
 		scale_x_log10() +
 		scale_y_log10() +
+		annotate("text", x = 30, y = 3*10^11, label=paste0("r^2 = ", summary(lm.high.y)$r.squared), colour="red", size=4) +
+		annotate("text", x = 30, y = 2*10^11, label=paste0("r^2 = ", summary(lm.low.y)$r.squared), colour="blue", size=4) +
+		annotate("text", x = 30, y = 1.35*10^11, label=paste0("r^2 = ", ((lm.lr.high$corr)$r)^2), colour="orange", size=4) +
+		annotate("text", x = 30, y = 9*10^10, label=paste0("r^2 = ", ((lm.lr.low$corr)$r)^2), colour="darkblue", size=4) +
+		annotate("text", x = 30, y = 6.5*10^10, label=paste0("r^2 = ", summary(lm.high.x)$r.squared), colour="darkviolet", size=4) +
+		annotate("text", x = 30, y = 4.6*10^10, label=paste0("r^2 = ", summary(lm.low.x)$r.squared), colour="green", size=4) +
 		labs(title = paste0("PDI Scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")"),
 				 x = "Storm duration (h)", y = "PDI (m^3/s^2)", colour = "SST Class")
 }
 
 plot_pdi_scatter(hurr.natl.pdi, ssts.natl)
-# plot_pdi_scatter(hurr.epac.pdi, ssts.epac)
+plot_pdi_scatter(hurr.epac.pdi, ssts.epac)
