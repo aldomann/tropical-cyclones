@@ -66,7 +66,7 @@ plot_pdi_scatter_legacy()
 plot_pdi_scatter_leg_vs_new_high <- function(){
 	hurr.high.pdi <- hurr.natl.pdi %>%
 		filter(storm.year %in% get_high_years(ssts.natl)) %>%
-		filter(storm.name == "UNNAMED")
+		filter(max.wind < 34)
 
 	ggplot() +
 		aes(x = storm.duration, y = storm.pdi) +
