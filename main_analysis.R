@@ -169,3 +169,15 @@ hurr.epac.pdi.no.td <- get_pdis_no_td(hurr.epac.obs)
 
 plot_pdi_scatter(hurr.natl.pdi.no.td, ssts.natl)
 plot_pdi_scatter(hurr.epac.pdi.no.td, ssts.epac)
+
+# Save PDIs ------------------------------------------------
+
+# hurr.natl.high.pdi <- hurr.natl.pdi %>% filter(storm.year %in% get_high_years(ssts.natl))
+# hurr.natl.low.pdi <- hurr.natl.pdi %>% filter(storm.year %in% get_low_years(ssts.natl))
+# hurr.epac.high.pdi <- hurr.epac.pdi %>% filter(storm.year %in% get_high_years(ssts.epac))
+# hurr.epac.low.pdi <- hurr.epac.pdi %>% filter(storm.year %in% get_low_years(ssts.epac))
+#
+# write.table(hurr.natl.high.pdi, file = "natl-high.csv", row.names = FALSE, sep = "  ", quote = FALSE)
+# write.table(hurr.epac.high.pdi, file = "epac-high.csv", row.names = FALSE, sep = "  ", quote = FALSE)
+# write.table(hurr.natl.low.pdi, file = "natl-low.csv", row.names = FALSE, sep = "  ", quote = FALSE)
+# write.table(hurr.epac.low.pdi, file = "epac-low.csv", row.names = FALSE, sep = "  ", quote = FALSE)
