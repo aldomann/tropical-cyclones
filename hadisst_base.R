@@ -6,7 +6,7 @@ library(stringr)
 library(raster)
 library(lubridate)
 
-# Data manipulation functions ------------------------------
+# SST manipulation functions -------------------------------
 
 load_hadsst <- function(file = "./HadISST_sst.nc") {
 	b <- brick(file)
@@ -77,7 +77,7 @@ get_high_years <- function(data.df) {
 
 # Data visualisation functions -----------------------------
 
-# Plot time series
+# Plot SST time series
 # library(extrafont)
 # font_import(paths = "~/TTF") # Only once
 plot_annual_sst <- function(data.df, save = F, pdf = F, lmodern = F){
