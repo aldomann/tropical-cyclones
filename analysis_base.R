@@ -52,7 +52,10 @@ scale_y_latitude <- function(ymin = -90, ymax = 90, step = 0.5, xtra.lim = 1.5, 
 														expand = c(0, 0), limits = c(ymin-xtra.lim, ymax+xtra.lim), ...))
 }
 
+# Install legacy version of ggalt (see https://github.com/hrbrmstr/ggalt/issues/33)
+# devtools::install_github("rplzzz/ggalt", ref = "ggp221")
 map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5), xtra.lims = c(1.5,1.5)){
+	# devtools::install_github("rplzzz/ggalt", ref = "ggp221")
 	coords <- morph_coords(coords)
 	hurr.obs <- hurr.obs %>%
 		filter(storm.year %in% years)
@@ -66,13 +69,16 @@ map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5), xtra.lims 
 		geom_cartogram(map = world_map, aes(map_id = region)) +
 		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]), step = steps[1], xtra.lim = xtra.lims[1]) +
 		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]), step = steps[2], xtra.lim = xtra.lims[2]) +
-		coord_trans() +
+		# coord_trans() +
+		coord_proj("+proj=merc") +
 		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2)
 		# + labs(title = paste0(title, " from ", years.str)
 	return(map)
 }
-map_region_hurrs2 <- function(hurr.obs, years, coords, rect.coords, steps = c(5,5), xtra.lims = c(1.5,1.5)){
+
+map_region_hurrs_full <- function(hurr.obs, years, coords, rect.coords, steps = c(5,5), xtra.lims = c(1.5,1.5)){
+	# devtools::install_github("rplzzz/ggalt", ref = "ggp221")
 	coords <- morph_coords(coords)
 	rect.coords <- morph_coords(rect.coords)
 	hurr.obs <- hurr.obs %>%
@@ -87,7 +93,8 @@ map_region_hurrs2 <- function(hurr.obs, years, coords, rect.coords, steps = c(5,
 		geom_cartogram(map = world_map, aes(map_id = region)) +
 		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]), step = steps[1], xtra.lim = xtra.lims[1]) +
 		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]), step = steps[2], xtra.lim = xtra.lims[2]) +
-		coord_trans() +
+		# coord_trans() +
+		coord_proj("+proj=merc") +
 		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2) +
 		annotate("rect", xmin = as.integer(rect.coords[1]), xmax = as.integer(rect.coords[2]),

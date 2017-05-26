@@ -64,10 +64,9 @@ plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
 # Maps of the basins
 # map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
 # map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
-
-# map_region_hurrs2(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))
-# map_region_hurrs2(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))
-
+#
+# map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))
+# map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))
 
 # PDI Time series ------------------------------------------
 
@@ -97,7 +96,7 @@ table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
 
 # New analysis ---------------------------------------------
 
-library(RVAideMemoire)
+# library(RVAideMemoire)
 
 # PDI scatterplots
 plot_pdi_scatter <- function(hurr.pdi, ssts){
