@@ -56,12 +56,15 @@ get_mean_ssts <- function(x = hadsst.raster, years, range = 6:10,
 # Normalise SSTs and divide by class
 normalise_ssts <- function(data.df, years){
 	mean.sst <- mean(data.df$sst)
+	stdv.sst <- sd(data.df$sst)/mean.sst
 	data.df <- data.df %>%
 		mutate(year = as.numeric(substring(rownames(data.df), 1)) + years[1] - 1,
 					 year = ymd(paste(year, "01", "01", sep = "-")),
 					 sst.norm = sst/mean.sst,
-					 sst.class = ifelse(sst.norm >= 1, "high", "low"))
-	data.df <- data.df[c("year", "sst", "sst.norm", "sst.class")]
+					 sst.class = ifelse(sst.norm >= 1, "high", "low"),
+					 sst.class.ultra = ifelse(sst.norm >= 1+stdv.sst, "high",
+					 												  ifelse(sst.norm <= 1-stdv.sst, "low", NA)))
+	data.df <- data.df[c("year", "sst", "sst.norm", "sst.class", "sst.class.ultra")]
 	return(data.df)
 }
 
@@ -72,6 +75,16 @@ get_low_years <- function(data.df) {
 
 get_high_years <- function(data.df) {
 	low.years <- year(data.df[data.df$sst.class == "high", ]$year)
+	return(low.years)
+}
+
+get_ultra_low_years <- function(data.df) {
+	low.years <- year(data.df[data.df$sst.class.ultra == "low", ]$year)
+	return(low.years)
+}
+
+get_ultra_high_years <- function(data.df) {
+	low.years <- year(data.df[data.df$sst.class.ultra == "high", ]$year)
 	return(low.years)
 }
 
@@ -114,3 +127,30 @@ plot_annual_sst <- function(data.df, save = F, pdf = F, lmodern = F){
 	}
 	sst.plot
 }
+
+plot_annual_sst_alt <- function(data.df){
+	mean.sst <- mean(data.df$sst)
+	mean.stdv.sst <- sd(data.df$sst)
+
+	title <- attr(data.df, "title")
+	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
+
+	sst.plot <- ggplot(data.df, aes(x = year, y = sst)) +
+		annotate("rect", fill = "blueviolet", alpha = 0.1,
+						 xmin = as.Date(-Inf, origin = data.df$year[1]),
+						 xmax = as.Date(Inf, origin = data.df$year[1]),
+						 ymin = mean.sst - mean.stdv.sst, ymax = mean.sst + mean.stdv.sst) +
+		geom_line(aes(linetype = "Annual"), colour = "black") +
+		geom_hline(aes(yintercept = mean.sst, linetype = "Mean"), colour = "blueviolet") +
+		scale_linetype_manual(values = c("solid", "twodash")) +
+		geom_point(aes(colour = sst.class)) +
+		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
+		labs(title = paste0(title, " SST between ", years.str),
+				 x = "Time (year)", y = "SST/⟨SST⟩",
+				 linetype = "SST", colour = "SST Class") +
+		guides(linetype = guide_legend(override.aes = list(colour = c("black", "blueviolet"))))
+
+	sst.plot
+}
+
+plot_annual_sst_alt(ssts.natl)
