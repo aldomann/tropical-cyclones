@@ -96,31 +96,8 @@ plot_pdi_tempseries(hurr.epac.pdi, ssts.epac)
 # write.table(hurr.epac.low.pdi, file = "epac-low.csv", row.names = FALSE, sep = "  ", quote = FALSE)
 
 # PDI scatterplots
-plot_pdi_scatter(hurr.natl.pdi, ssts.natl)
+plot_pdi_scatter(hurr.natl.pdi, ssts.natl) #, no.td = F)
 plot_pdi_scatter(hurr.epac.pdi, ssts.epac)
-
-# Filter out tropical depressions
-get_pdis_no_td <- function(hurr.obs){
-	hurr.obs.pdi <- hurr.obs %>%
-		group_by(storm.id, storm.name, n.obs) %>%
-		summarise(storm.pdi = sum(conv_unit(wind, "knot", "m_per_sec")^3 * conv_unit(6, "hr", "sec")),
-							max.wind = max(wind)) %>%
-		mutate(storm.duration = n.obs * conv_unit(6, "hr", "sec")) %>%
-		mutate(storm.year = substring(storm.id, 5, 9)) %>%
-		filter(max.wind > 30) %>%
-		filter(storm.pdi != "NA") %>%
-		filter(storm.pdi != 0)
-	hurr.obs.pdi <- hurr.obs.pdi[c("storm.id", "storm.name", "n.obs", "storm.duration",
-																 "storm.pdi", "max.wind", "storm.year")]
-	return(hurr.obs.pdi)
-}
-
-hurr.natl.pdi.no.td <- get_pdis_no_td(hurr.natl.obs)
-hurr.epac.pdi.no.td <- get_pdis_no_td(hurr.epac.obs)
-
-plot_pdi_scatter(hurr.natl.pdi.no.td, ssts.natl)
-plot_pdi_scatter(hurr.epac.pdi.no.td, ssts.epac)
-
 
 # Tests  ---------------------------------------------------
 

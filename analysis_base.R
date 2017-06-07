@@ -121,9 +121,14 @@ plot_pdi_tempseries <- function(hurr.pdi, ssts){
 }
 
 # PDI scatterplots
-plot_pdi_scatter <- function(hurr.pdi, ssts){
-	hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts))
-	hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts))
+plot_pdi_scatter <- function(hurr.pdi, ssts, no.td = T){
+	if(no.td == T){
+		hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts)) %>% filter(max.wind > 34)
+		hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts)) %>% filter(max.wind > 34)
+	} else {
+		hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts))
+		hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts))
+	}
 
 	lm.high.y <- lm(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.high.pdi)
 	lm.low.y <- lm(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.low.pdi)
