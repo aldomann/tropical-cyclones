@@ -36,16 +36,16 @@ map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5), xtra.lims 
 	# title <- "asd"
 	# years.str <- paste0(years[1], "-", years[length(years)])
 
-	map <- ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
+	ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
 		geom_cartogram(map = world_map, aes(map_id = region)) +
-		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]), step = steps[1], xtra.lim = xtra.lims[1]) +
-		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]), step = steps[2], xtra.lim = xtra.lims[2]) +
-		# coord_trans() +
+		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]),
+											step = steps[1], xtra.lim = xtra.lims[1]) +
+		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]),
+										 step = steps[2], xtra.lim = xtra.lims[2]) +
 		coord_proj("+proj=merc") +
 		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2)
 		# + labs(title = paste0(title, " from ", years.str)
-	return(map)
 }
 
 map_region_hurrs_full <- function(hurr.obs, years, coords, rect.coords, steps = c(5,5), xtra.lims = c(1.5,1.5)){
@@ -59,11 +59,12 @@ map_region_hurrs_full <- function(hurr.obs, years, coords, rect.coords, steps = 
 	# title <- "asd"
 	# years.str <- paste0(years[1], "-", years[length(years)])
 
-	map <- ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
+	ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
 		geom_cartogram(map = world_map, aes(map_id = region)) +
-		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]), step = steps[1], xtra.lim = xtra.lims[1]) +
-		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]), step = steps[2], xtra.lim = xtra.lims[2]) +
-		# coord_trans() +
+		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]),
+											step = steps[1], xtra.lim = xtra.lims[1]) +
+		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]),
+										 step = steps[2], xtra.lim = xtra.lims[2]) +
 		coord_proj("+proj=merc") +
 		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2) +
@@ -71,7 +72,6 @@ map_region_hurrs_full <- function(hurr.obs, years, coords, rect.coords, steps = 
 						 ymin = as.integer(rect.coords[3]), ymax = as.integer(rect.coords[4]),
 						 color = "green", alpha = 0.2)
 	# + labs(title = paste0(title, " from ", years.str)
-	return(map)
 }
 
 # PDI visualisation functions ------------------------------
@@ -109,7 +109,7 @@ plot_pdi_tempseries <- function(hurr.pdi, ssts){
 	hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts))
 	years.str <- paste0(year(ssts$year[1]), "-", year(ssts$year[length(ssts$year)]))
 
-	gg <- ggplot() +
+	ggplot() +
 		aes(x = as.Date(paste(storm.year, "01", "01", sep = "-")), y = storm.pdi, group = 1) +
 		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.5)+
 		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.5)+
@@ -117,9 +117,7 @@ plot_pdi_tempseries <- function(hurr.pdi, ssts){
 		scale_y_log10() +
 		labs(title = paste0("PDI Time series", " (", attr(ssts, "title"), "; ", years.str, ")"),
 				 x = "Time (year)", y = "PDI (m^3/s^2)", colour = "SST Class" )
-	# ggsave(filename = "asd.pdf",
-	# 			 width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
-	gg
+	# ggsave(filename = "asd.pdf", width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
 }
 
 # PDI scatterplots

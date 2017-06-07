@@ -6,6 +6,11 @@ source("hadisst_base.R")
 source("hurdat2_pdi_base.R")
 source("analysis_base.R")
 
+# Save in PDF + Latin Modern Roman -------------------------
+
+# + theme(text = element_text(family = "LM Roman 10"))
+# + ggsave(filename = "asd.pdf", width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
+
 # Create PDI data frame ------------------------------------
 
 # Get hurricanes data frames
@@ -56,26 +61,27 @@ table(ssts.epac$sst.class)
 # map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
 # map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
 
-map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))
-map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))
+map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))# + ggsave(filename = "map-natl.pdf", width = 7.2, height = 4.5, dpi = 96, device = cairo_pdf)
+map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))#  + ggsave(filename = "map-epac.pdf", width = 8.8, height = 4.5, dpi = 96, device = cairo_pdf)
 
 # Plot SSTs and PDIs ---------------------------------------
 
 # Plot annual SSTs
 plot_annual_sst(ssts.natl)
 plot_annual_sst(ssts.epac)
-# plot_annual_sst(ssts.epac, save = T, pdf = T, lmodern = T)
+
 plot_annual_sst_alt(ssts.natl)
 
 # DPDI plots by SST class
 plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl)
 plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
 
+# PDFI time series
 plot_pdi_tempseries(hurr.natl.pdi, ssts.natl)
 plot_pdi_tempseries(hurr.epac.pdi, ssts.epac)
 
 # Get summary of cyclone status
-table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
+# table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
 
 # Scatterplots analysis ------------------------------------
 
@@ -104,7 +110,8 @@ get_pdis_no_td <- function(hurr.obs){
 		filter(max.wind > 30) %>%
 		filter(storm.pdi != "NA") %>%
 		filter(storm.pdi != 0)
-	hurr.obs.pdi <- hurr.obs.pdi[c("storm.id", "storm.name", "n.obs", "storm.duration", "storm.pdi", "max.wind", "storm.year")]
+	hurr.obs.pdi <- hurr.obs.pdi[c("storm.id", "storm.name", "n.obs", "storm.duration",
+																 "storm.pdi", "max.wind", "storm.year")]
 	return(hurr.obs.pdi)
 }
 
