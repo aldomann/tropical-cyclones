@@ -43,7 +43,7 @@ map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5), xtra.lims 
 		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]),
 										 step = steps[2], xtra.lim = xtra.lims[2]) +
 		coord_proj("+proj=merc") +
-		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
+		geom_path(data = hurr.obs, aes(x = long, y = lat, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2)
 		# + labs(title = paste0(title, " from ", years.str)
 }
@@ -66,7 +66,7 @@ map_region_hurrs_full <- function(hurr.obs, years, coords, rect.coords, steps = 
 		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]),
 										 step = steps[2], xtra.lim = xtra.lims[2]) +
 		coord_proj("+proj=merc") +
-		geom_path(data = hurr.obs, aes(x = long.num, y = lat.num, group = storm.id),
+		geom_path(data = hurr.obs, aes(x = long, y = lat, group = storm.id),
 							color = "red", alpha = 0.2, size = 0.2) +
 		annotate("rect", xmin = as.integer(rect.coords[1]), xmax = as.integer(rect.coords[2]),
 						 ymin = as.integer(rect.coords[3]), ymax = as.integer(rect.coords[4]),

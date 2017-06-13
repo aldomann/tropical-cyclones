@@ -77,12 +77,12 @@ get_hurr_obs <- function(filename){
 
 	# Split the numeric coordinates from their directions
 	hurr.obs <- hurr.obs %>%
-		mutate(lat.num = morph_lat(lat),
+		mutate(lat.num = as.numeric(str_extract(lat, "[^A-Z]+")),
 					 lat.dir = str_extract(lat, "[A-Z]"),
-					 lat = as.numeric(str_extract(lat, "[^A-Z]+")),
-					 long.num = morph_long(long),
+					 lat = morph_lat(lat),
+					 long.num = as.numeric(str_extract(long, "[^A-Z]+")),
 					 long.dir = str_extract(long, "[A-Z]"),
-					 long = as.numeric(str_extract(long, "[^A-Z]+")))
+					 long = morph_long(long))
 
 	# Clean non-standard data ----------------------------------
 
@@ -128,7 +128,8 @@ get_hurr_obs <- function(filename){
 
 	# Rearrange hurr.obs data frame columns
 	hurr.obs <- hurr.obs[c("storm.id", "storm.name", "n.obs", "date.time", "status",
-												 "lat", "lat.dir", "lat.num", "long", "long.dir", "long.num",
+												 # "lat.num", "lat.dir", "lat", "long.num", "long.dir", "long",
+												 "lat", "long",
 												 "wind", "storm.year")]
 	# Unused variables
 	# 	"delta.t" after "date.time"

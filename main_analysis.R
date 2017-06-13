@@ -61,8 +61,8 @@ table(ssts.epac$sst.class)
 # map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
 # map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
 
-map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2))# + ggsave(filename = "map-natl.pdf", width = 7.2, height = 4.5, dpi = 96, device = cairo_pdf)
-map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2))#  + ggsave(filename = "map-epac.pdf", width = 8.8, height = 4.5, dpi = 96, device = cairo_pdf)
+map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2)) #+ ggsave(filename = "map-natl.pdf", width = 6.5, height = 4, dpi = 96, device = cairo_pdf)
+map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2)) #+ ggsave(filename = "map-epac.pdf", width = 7, height = 3.6, dpi = 96, device = cairo_pdf)
 
 # Plot SSTs and PDIs ---------------------------------------
 
