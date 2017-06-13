@@ -73,7 +73,8 @@ plot_dpdi <- function(hurr.obs.pdi, years){
 		geom_errorbar(width = 0.1) +
 		scale_x_log10() +
 		scale_y_log10() +
-		labs(title = paste0("PDI probability density for ", years[1], "-", years[length(years)]),
+		labs(title = paste0("PDI probability density for ", years[1], "-", years[length(years)],
+												" (", attr(hurr.obs.pdi, "title"), ")"),
 				 x = "PDI (m^3/s^2)", y = "D(PDI) (s^2/m^3)")
 }
 

@@ -72,6 +72,10 @@ plot_annual_sst(ssts.epac)
 
 plot_annual_sst_alt(ssts.natl)
 
+# DPDI plots
+plot_dpdi(hurr.natl.pdi, years.natl)
+plot_dpdi(hurr.epac.pdi, years.epac)
+
 # DPDI plots by SST class
 plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl)
 plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac)
