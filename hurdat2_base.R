@@ -5,7 +5,6 @@ library(tidyverse)
 library(stringr) # To split lines
 library(lubridate) # Use dates
 
-
 # Get hurricane observations data frame --------------------
 
 get_hurr_obs <- function(filename){

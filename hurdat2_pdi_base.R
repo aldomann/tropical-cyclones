@@ -88,9 +88,9 @@ track_storm <- function(hurr.obs = hurr.all.obs, storm, year){
 				 aes(x = date.time, y = wind)) +
 		geom_line(linetype = "dotted") +
 		geom_point(aes(colour = status)) +
-		labs(title = paste0(storm, " profile ", "(", year, ")",
-												", PDI = ", scientific(get_pdi(hurr.all.pdi, storm, year), digits = 3), " m^3/s^2"),
-				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")
+		labs(title = bquote(.(storm) ~ profile ~ .(paste0("(", year, "),") ) ~ PDI ==
+												.(scientific(get_pdi(hurr.all.pdi, storm, year), digits = 3)) ~ m^3 ~s^-2),
+				 x = "Time (days)", y = "Wind speed (kt)", colour = "Status")
 }
 
 # Track of a single storm by id
@@ -105,6 +105,6 @@ track_storm_by_id <- function(hurr.obs = hurr.all.obs, id){
 		geom_point(aes(colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",
 												", PDI = ", scientific(get_pdi_by_id(hurr.all.pdi, id), digits = 3), " m^3/s^2"),
-				 x = "Time (days)", y = "Velocity (kt)", colour = "Status")
+				 x = "Time (days)", y = "Wind speed (kt)", colour = "Status")
 }
 
