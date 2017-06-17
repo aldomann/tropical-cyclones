@@ -44,7 +44,7 @@ get_dpdi <- function(hurr.obs.pdi, years){
 	hurr.obs.pdi <- hurr.obs.pdi %>%
 		filter(storm.year %in% years)
 
-	c <- 10^(1/4)
+	c <- 10^(1/5)
 	m <- min(hurr.obs.pdi$storm.pdi)
 
 	dpdi.df <- data.frame()
