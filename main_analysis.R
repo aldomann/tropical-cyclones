@@ -19,9 +19,11 @@ hurr.epac.obs <- get_hurr_obs("hurdat2-nepac-1949-2016-apr2017.txt")
 hurr.all.obs <- rbind(hurr.natl.obs, hurr.epac.obs)
 
 # Create data frame with PDI and year of the storm
-hurr.natl.pdi <- get_pdis(hurr.natl.obs)
+hurr.natl.pdi <- get_pdis(hurr.natl.obs) %>%
+	filter(storm.id != "AL171988")
 attr(hurr.natl.pdi, "title") <- "N. Atl."
-hurr.epac.pdi <- get_pdis(hurr.epac.obs)
+hurr.epac.pdi <- get_pdis(hurr.epac.obs) %>%
+	filter(storm.id != "EP231989")
 attr(hurr.epac.pdi, "title") <- "E. Pac."
 hurr.all.pdi <- get_pdis(hurr.all.obs)
 
@@ -101,7 +103,7 @@ plot_pdi_tempseries(hurr.epac.pdi, ssts.epac)
 
 # PDI scatterplots
 plot_pdi_scatter(hurr.natl.pdi, ssts.natl) #, no.td = F)
-plot_pdi_scatter(hurr.epac.pdi, ssts.epac)
+plot_pdi_scatter(hurr.epac.pdi, ssts.epac) #, no.td = F)
 
 # Tests  ---------------------------------------------------
 
