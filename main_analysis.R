@@ -63,8 +63,12 @@ table(ssts.epac$sst.class)
 # map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
 # map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
 
-map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2)) #+ ggsave(filename = "map-natl.pdf", width = 6.5, height = 4, dpi = 96, device = cairo_pdf)
-map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2)) #+ ggsave(filename = "map-epac.pdf", width = 7, height = 3.6, dpi = 96, device = cairo_pdf)
+map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-natl.pdf", width = 5.5, height = 3.4, dpi = 96, device = cairo_pdf)
+map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-epac.pdf", width = 6, height = 3.15, dpi = 96, device = cairo_pdf)
+
+# SST map of a raster layer
+map_global_sst(hadsst.raster, 12, 2015) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-sst.pdf", width = 6, height = 3, dpi = 96, device = cairo_pdf)
+
 
 # Plot SSTs and PDIs ---------------------------------------
 
@@ -75,8 +79,8 @@ plot_annual_sst(ssts.epac)
 plot_annual_sst_alt(ssts.natl)
 
 # DPDI plots
-plot_dpdi(hurr.natl.pdi, years.natl)
-plot_dpdi(hurr.epac.pdi, years.epac)
+plot_dpdi(hurr.natl.pdi, years.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_dpdi(hurr.epac.pdi, years.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
 
 # DPDI plots by SST class
 plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl)
