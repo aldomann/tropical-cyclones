@@ -75,7 +75,7 @@ plot_dpdi <- function(hurr.obs.pdi, years){
 		scale_y_log10() +
 		labs(title = paste0("PDI probability density for ", years[1], "-", years[length(years)],
 												" (", attr(hurr.obs.pdi, "title"), ")"),
-				 x = "PDI (m^3/s^2)", y = "D(PDI) (s^2/m^3)")
+				 x = bquote(PDI~ (m^3 ~s^-2)), y = bquote(D(PDI)~(s^2~m^-3)))
 }
 
 # Track a storm --------------------------------------------
