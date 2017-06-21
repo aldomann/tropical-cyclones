@@ -51,12 +51,12 @@ get_mean_ssts <- function(x = hadsst.raster, years, range = 6:10,
 
 	mean.df <- unlist(mean.brick)
 	mean.df <- data.frame(sst = mean.df)
-	mean.df <- normalise_ssts(mean.df, years)
+	mean.df <- classify_ssts(mean.df, years)
 	return(mean.df)
 }
 
 # Normalise SSTs and divide by class
-normalise_ssts <- function(data.df, years){
+classify_ssts <- function(data.df, years){
 	mean.sst <- mean(data.df$sst)
 	data.df <- data.df %>%
 		mutate(year = as.numeric(substring(rownames(data.df), 1)) + years[1] - 1,
