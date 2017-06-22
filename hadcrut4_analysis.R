@@ -5,10 +5,11 @@ library(tidyverse)
 library(lubridate) # Use dates
 
 # Read and clean raw data ----------------------------------
-temps.file <- paste0("data/", "HadCRUT.4.5.0.0.annual_ns_avg_smooth.txt")
 
-temps.data <- read.table(temps.file)
+# Read the raw data
+temps.data <- read.table("data/HadCRUT.4.5.0.0.annual_ns_avg_smooth.txt")
 
+# Clean the raw data
 temps.data <- temps.data %>%
 	dplyr::select(V1, V2) %>%
 	rename(year = V1, temp = V2) %>%
@@ -17,6 +18,7 @@ temps.data <- temps.data %>%
 
 # Data visualisation ---------------------------------------
 
+# Plot global mean temperature anomalies
 plot_global_temperature <- function(data.df){
 	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
 

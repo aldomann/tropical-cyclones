@@ -50,8 +50,8 @@ attr(ssts.epac, "title") <- "E. Pac."
 # Create vector of low & high SST years
 # years.low.natl <- get_low_years(ssts.natl)
 # years.high.natl <- get_high_years(ssts.natl)
-# years.low.epac <- get_low_years(ssts.natl)
-# years.high.epac <- get_high_years(ssts.natl)
+# years.low.epac <- get_low_years(ssts.epac)
+# years.high.epac <- get_high_years(ssts.epac)
 
 # Get number of years per SST class
 table(ssts.natl$sst.class)
