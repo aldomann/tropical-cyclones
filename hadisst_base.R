@@ -137,7 +137,7 @@ plot_annual_sst_alt <- function(data.df){
 		scale_linetype_manual(values = c("solid", "twodash")) +
 		geom_point(aes(colour = sst.class)) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
-		labs(title = paste0(title, " SST between ", years.str, "; ⟨SST⟩ = ", format(round(mean.sst, 2), nsmall = 2)),
+		labs(title = paste0(title, " SST between ", years.str, "; ⟨SST⟩ = ", format(round(mean.sst, 2), nsmall = 2), "°C"),
 				 x = "Time (year)", y = "SST/⟨SST⟩",
 				 linetype = "SST", colour = "SST Class") +
 		guides(linetype = guide_legend(override.aes = list(colour = c("black", "blueviolet"))))

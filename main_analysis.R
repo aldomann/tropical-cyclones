@@ -76,7 +76,8 @@ map_global_sst(hadsst.raster, 12, 2015) #+ theme(text = element_text(family = "L
 plot_annual_sst(ssts.natl)
 plot_annual_sst(ssts.epac)
 
-plot_annual_sst_alt(ssts.natl)
+plot_annual_sst_alt(ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "ssts-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_annual_sst_alt(ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "ssts-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
 
 # DPDI plots
 plot_dpdi(hurr.natl.pdi, years.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
