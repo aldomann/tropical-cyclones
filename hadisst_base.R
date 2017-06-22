@@ -102,9 +102,7 @@ map_global_sst <- function(x = hadsst.raster, month, year){
 }
 
 # Plot SST time series
-# library(extrafont)
-# font_import(paths = "~/TTF") # Only once
-plot_annual_sst <- function(data.df){
+plot_annual_sst_norm <- function(data.df){
 	title <- attr(data.df, "title")
 	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
 
@@ -120,7 +118,7 @@ plot_annual_sst <- function(data.df){
 		guides(linetype = guide_legend(override.aes = list(colour = c("black", "blueviolet"))))
 }
 
-plot_annual_sst_alt <- function(data.df){
+plot_annual_sst <- function(data.df){
 	mean.sst <- mean(data.df$sst)
 	mean.sd.sst <- sd(data.df$sst)/sqrt(length(data.df$sst))
 

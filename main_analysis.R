@@ -8,6 +8,8 @@ source("analysis_base.R")
 
 # Save in PDF + Latin Modern Roman -------------------------
 
+# library(extrafont)
+# font_import(paths = "~/TTF") # Only once
 # + theme(text = element_text(family = "LM Roman 10"))
 # + ggsave(filename = "asd.pdf", width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
 
@@ -63,33 +65,32 @@ table(ssts.epac$sst.class)
 # map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
 # map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
 
+# Maps of the basins (full)
 map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-natl.pdf", width = 5.5, height = 3.4, dpi = 96, device = cairo_pdf)
 map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-epac.pdf", width = 6, height = 3.15, dpi = 96, device = cairo_pdf)
 
 # SST map of a raster layer
 map_global_sst(hadsst.raster, 12, 2015) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-sst.pdf", width = 6, height = 3, dpi = 96, device = cairo_pdf)
 
-
 # Plot SSTs and PDIs ---------------------------------------
 
 # Plot annual SSTs
-plot_annual_sst(ssts.natl)
-plot_annual_sst(ssts.epac)
+# plot_annual_sst_norm(ssts.natl)
+# plot_annual_sst_norm(ssts.epac)
+plot_annual_sst(ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_annual_sst(ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
 
-plot_annual_sst_alt(ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
-plot_annual_sst_alt(ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
-
-# DPDI plots
-plot_dpdi(hurr.natl.pdi, years.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
-plot_dpdi(hurr.epac.pdi, years.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
-
-# DPDI plots by SST class
-plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
-plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
-
-# PDFI time series
+# PDI time series
 plot_pdi_tempseries(hurr.natl.pdi, ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "time-series-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
 plot_pdi_tempseries(hurr.epac.pdi, ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "time-series-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+
+# DPDI plots
+plot_dpdi(hurr.natl.pdi, years.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+plot_dpdi(hurr.epac.pdi, years.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+
+# DPDI plots by SST class
+plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
 
 # Get summary of cyclone status
 # table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
