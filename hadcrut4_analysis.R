@@ -17,14 +17,18 @@ temps.data <- temps.data %>%
 
 # Data visualisation ---------------------------------------
 
-templ.plot <- ggplot(temps.data) +
-	aes(x = year, y = temp) +
-	geom_hline(aes(yintercept = 0, linetype = "1961-1990 mean"), colour = "blueviolet") +
-	geom_line(aes(linetype = "Annual"), colour = "black") +
-	geom_point(data=temps.data[126, ], aes(x = year, y = temp), colour="red", size=2) +
-	scale_linetype_manual(values = c("twodash", "solid")) +
-	labs(title = paste0("Global average temperature 1850-2016"),
-			 x = "Time (year)", y = "Temperature anomaly (°C)", linetype = "Temperature") +
-	guides(linetype = guide_legend(override.aes = list(colour = c("blueviolet", "black"))))
+plot_global_temperature <- function(data.df){
+	years.str <- paste0(year(data.df$year[1]), "-", year(data.df$year[length(data.df$year)]))
 
-templ.plot #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "global-temps.pdf", width = 6.5, height = 2.5, dpi = 96, device = cairo_pdf)
+	ggplot(data.df) +
+		aes(x = year, y = temp) +
+		geom_hline(aes(yintercept = 0, linetype = "1961-90 mean"), colour = "blueviolet") +
+		geom_line(aes(linetype = "Annual"), colour = "black") +
+		geom_point(data=temps.data[126, ], aes(x = year, y = temp), colour="red", size=2) +
+		scale_linetype_manual(values = c("twodash", "solid")) +
+		labs(title = paste0("Global mean temperature between ", years.str),
+				 x = "Time (year)", y = "Temperature anomaly (°C)", linetype = "Temperature") +
+		guides(linetype = guide_legend(override.aes = list(colour = c("blueviolet", "black"))))
+}
+
+plot_global_temperature(temps.data) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "global-temps.pdf", width = 6.3, height = 3.5, dpi = 96, device = cairo_pdf)
