@@ -33,9 +33,6 @@ map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5), xtra.lims 
 	world_map <- map_data("world")
 	world_map <- subset(world_map, region!="Antarctica")
 
-	# title <- "asd"
-	# years.str <- paste0(years[1], "-", years[length(years)])
-
 	ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
 		geom_cartogram(map = world_map, aes(map_id = region)) +
 		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]),
@@ -44,8 +41,7 @@ map_region_hurrs <- function(hurr.obs, years, coords, steps = c(5,5), xtra.lims 
 										 step = steps[2], xtra.lim = xtra.lims[2]) +
 		coord_proj("+proj=merc") +
 		geom_path(data = hurr.obs, aes(x = long, y = lat, group = storm.id),
-							color = "red", alpha = 0.2, size = 0.2)
-		# + labs(title = paste0(title, " from ", years.str)
+							colour = "red", alpha = 0.2, size = 0.2)
 }
 
 map_region_hurrs_full <- function(hurr.obs, years, coords, rect.coords, steps = c(5,5), xtra.lims = c(1.5,1.5)){
@@ -56,22 +52,18 @@ map_region_hurrs_full <- function(hurr.obs, years, coords, rect.coords, steps = 
 	world_map <- map_data("world")
 	world_map <- subset(world_map, region!="Antarctica")
 
-	# title <- "asd"
-	# years.str <- paste0(years[1], "-", years[length(years)])
-
 	ggplot(data = world_map, aes(x = long, y = lat, group = group)) +
-		geom_cartogram(map = world_map, aes(map_id = region)) +
+		geom_cartogram(map = world_map, aes(map_id = region), colour = "white", fill = "grey50") +
 		scale_x_longitude(xmin = as.numeric(coords[1]), xmax = as.numeric(coords[2]),
 											step = steps[1], xtra.lim = xtra.lims[1]) +
 		scale_y_latitude(ymin = as.numeric(coords[3]), ymax = as.numeric(coords[4]),
 										 step = steps[2], xtra.lim = xtra.lims[2]) +
 		coord_proj("+proj=merc") +
 		geom_path(data = hurr.obs, aes(x = long, y = lat, group = storm.id),
-							color = "red", alpha = 0.2, size = 0.2) +
+							colour = "red", alpha = 0.2, size = 0.2) +
 		annotate("rect", xmin = as.integer(rect.coords[1]), xmax = as.integer(rect.coords[2]),
 						 ymin = as.integer(rect.coords[3]), ymax = as.integer(rect.coords[4]),
-						 color = "green", alpha = 0.2)
-	# + labs(title = paste0(title, " from ", years.str)
+						 colour = "green", alpha = 0.2)
 }
 
 # PDI visualisation functions ------------------------------
@@ -99,8 +91,8 @@ plot_dpdi_by_sst_class <- function(hurr.obs.pdi, ssts.df){
 		labs(title = paste0("PDI probability density for ",
 												years[1], "-", years[length(years)],
 												" (", attr(ssts.df, "title"), ")"),
-				 x = bquote(PDI~ (m^3 ~s^-2)), y = bquote(D(PDI)~(s^2~m^-3)), colour = "SST Class") +
-		theme(legend.position = c(0.92, 0.85))
+				 x = bquote(PDI~ (m^3 ~s^-2)), y = bquote(D(PDI)~(s^2~m^-3)), colour = "SST class") +
+		theme(legend.position = c(0.92, 0.82))
 }
 
 # Plot PDI time series
@@ -116,18 +108,23 @@ plot_pdi_tempseries <- function(hurr.pdi, ssts){
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		scale_y_log10() +
 		labs(title = paste0("PDI Time series", " (", attr(ssts, "title"), "; ", years.str, ")"),
-				 x = "Time (year)", y = "PDI (m^3/s^2)", colour = "SST Class" )
-	# ggsave(filename = "asd.pdf", width = 7.813, height = 4.33, dpi = 96, device = cairo_pdf)
+				 x = "Time (year)", y = bquote(PDI~ (m^3 ~s^-2)), colour = "SST class" )
 }
 
 # PDI scatterplots
 plot_pdi_scatter <- function(hurr.pdi, ssts, no.td = T){
 	if(no.td == T){
-		hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts)) %>% filter(max.wind > 34)
-		hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts)) %>% filter(max.wind > 34)
+		hurr.high.pdi <- hurr.pdi %>%
+			filter(storm.year %in% get_high_years(ssts)) %>%
+			filter(max.wind >= 34)
+		hurr.low.pdi <- hurr.pdi %>%
+			filter(storm.year %in% get_low_years(ssts)) %>%
+			filter(max.wind >= 34)
 	} else {
-		hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts))
-		hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts))
+		hurr.high.pdi <- hurr.pdi %>%
+			filter(storm.year %in% get_high_years(ssts))
+		hurr.low.pdi <- hurr.pdi %>%
+			filter(storm.year %in% get_low_years(ssts))
 	}
 
 	lm.high.y <- lm(log10(storm.pdi) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.high.pdi)
@@ -153,11 +150,11 @@ plot_pdi_scatter <- function(hurr.pdi, ssts, no.td = T){
 		scale_colour_manual(values = c("high" = "brown1", "low" = "dodgerblue1",
 																	 "high.y~x" = "red", "low.y~x" = "blue",
 																	 "high.x~y" = "darkviolet", "low.x~y" = "green")) +
-		guides(color=guide_legend(override.aes = list(linetype = c(0,4,4,0,4,4)))) +
+		guides(colour=guide_legend(override.aes = list(linetype = c(0,4,4,0,4,4)))) +
 		scale_x_log10() +
 		scale_y_log10() +
 		annotate("text", x = 50, y = 3*10^11, label=paste0("r^2 = ", summary(lm.high.y)$r.squared), colour="brown1", size=4) +
 		annotate("text", x = 50, y = 2*10^11, label=paste0("r^2 = ", summary(lm.low.y)$r.squared), colour="dodgerblue1", size=4) +
 		labs(title = paste0("PDI Scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")") ,
-				 x = "Storm duration (h)", y = "PDI (m^3/s^2)", colour = "SST Class")
+				 x = "Storm duration (h)", y = bquote(PDI~ (m^3 ~s^-2)), colour = "SST class")
 }
