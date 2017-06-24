@@ -56,8 +56,13 @@ attr(ssts.epac, "title") <- "E. Pac."
 # years.high.epac <- get_high_years(ssts.epac)
 
 # Get number of years per SST class
-table(ssts.natl$sst.class)
-table(ssts.epac$sst.class)
+# table(ssts.natl$sst.class)
+# table(ssts.epac$sst.class)
+
+# length((hurr.natl.pdi %>% filter(storm.year %in% get_high_years(ssts.natl)))$storm.pdi)
+# length((hurr.natl.pdi %>% filter(storm.year %in% get_low_years(ssts.natl)))$storm.pdi)
+# length((hurr.epac.pdi %>% filter(storm.year %in% get_high_years(ssts.epac)))$storm.pdi)
+# length((hurr.epac.pdi %>% filter(storm.year %in% get_low_years(ssts.epac)))$storm.pdi)
 
 # Basins maps ----------------------------------------------
 
@@ -89,8 +94,8 @@ plot_dpdi(hurr.natl.pdi, years.natl) #+ theme(text = element_text(family = "LM R
 plot_dpdi(hurr.epac.pdi, years.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
 
 # DPDI plots by SST class
-plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
-plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-natl.pdf", width = 6.5, height = 3.25, dpi = 96, device = cairo_pdf)
+plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-epac.pdf", width = 6.5, height = 3.25, dpi = 96, device = cairo_pdf)
 
 # Get summary of cyclone status
 # table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
