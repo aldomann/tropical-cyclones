@@ -110,8 +110,7 @@ plot_pdi_tempseries <- function(hurr.pdi, ssts){
 				 x = "Time (year)", y = bquote(PDI~ (m^3 ~s^-2)), colour = "SST class" )
 }
 
-
-# Scatterplots ---------------------------------------------
+# Scatterplot functions ------------------------------------
 
 # PDI scatterplots
 plot_pdi_scatter_by_class <- function(hurr.pdi, ssts, class){
@@ -283,4 +282,3 @@ plot_pdi_scatter_wind <- function(hurr.pdi, ssts){
 				 x = "Maximum wind speed (kt)", y = bquote(PDI~ (m^3 ~s^-2)),
 				 colour = "SST class", linetype = "Regression")
 }
-
