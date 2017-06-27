@@ -21,6 +21,6 @@ hurr.all.pdi <- get_pdis(hurr.all.obs)
 plot_dpdi(hurr.all.pdi, 2004:2007)
 
 #get_pdi(hurr.natl.pdi, "katrina", 2005)
-track_storm(hurr.natl.obs, "Katrina", 2005) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "track-storm-katrina.pdf", width = 6.5, height = 4, dpi = 96, device = cairo_pdf)
+track_storm(hurr.natl.obs, "Katrina", 2005) #+ theme_bw() + theme(legend.position = c(0.15, 0.75)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "track-storm-katrina.pdf", width = 6.5, height = 4, dpi = 96, device = cairo_pdf)
 #track_storm(hurr.natl.obs, "Betsy", "1956")
 #track_storm_by_id(hurr.natl.obs, "AL191976")

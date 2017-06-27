@@ -33,4 +33,4 @@ plot_global_temperature <- function(data.df){
 		guides(linetype = guide_legend(override.aes = list(colour = c("blueviolet", "black"))))
 }
 
-plot_global_temperature(temps.data) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "global-temps.pdf", width = 6.3, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_global_temperature(temps.data) #+ theme_bw() + theme(legend.position = c(0.13, 0.82)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "global-temps.pdf", width = 6.3, height = 3.5, dpi = 96, device = cairo_pdf)
