@@ -36,7 +36,7 @@ hadsst.raster <- load_hadsst(file = "data/HadISST_sst.nc")
 # Windows of activity
 years.natl <- 1966:2016
 coords.natl <- c("90W", "20E", "5N", "25N")
-coords.natl.map <- c("100W", "20E", "5N", "60N")
+coords.natl.map <- c("100W", "20E", "0N", "60N")
 
 years.epac <- 1966:2016
 coords.epac <- c("120W", "90W", "5N", "20N")
@@ -49,16 +49,17 @@ attr(ssts.natl, "title") <- "N. Atl."
 ssts.epac <- get_mean_ssts(years = years.epac, coords = coords.epac)
 attr(ssts.epac, "title") <- "E. Pac."
 
-# Create vector of low & high SST years
-# years.low.natl <- get_low_years(ssts.natl)
-# years.high.natl <- get_high_years(ssts.natl)
-# years.low.epac <- get_low_years(ssts.epac)
-# years.high.epac <- get_high_years(ssts.epac)
+# Get list of low & high SST years
+# get_low_years(ssts.natl)
+# get_high_years(ssts.natl)
+# get_low_years(ssts.epac)
+# get_high_years(ssts.epac)
 
 # Get number of years per SST class
 # table(ssts.natl$sst.class)
 # table(ssts.epac$sst.class)
 
+# Get number of storms per SST class
 # length((hurr.natl.pdi %>% filter(storm.year %in% get_high_years(ssts.natl)))$storm.pdi)
 # length((hurr.natl.pdi %>% filter(storm.year %in% get_low_years(ssts.natl)))$storm.pdi)
 # length((hurr.epac.pdi %>% filter(storm.year %in% get_high_years(ssts.epac)))$storm.pdi)
@@ -67,12 +68,12 @@ attr(ssts.epac, "title") <- "E. Pac."
 # Basins maps ----------------------------------------------
 
 # Maps of the basins
-# map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
-# map_region_hurrs(hurr.epac.obs, years.epac, coords.epac)
+# map_region_hurrs_small(hurr.natl.obs, years.natl, coords.natl.map, steps = c(20, 10), xtra.lims = c(3,2))
+# map_region_hurrs_small(hurr.epac.obs, years.epac, coords.epac)
 
 # Maps of the basins (full)
-map_region_hurrs_full(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-natl.pdf", width = 5.5, height = 3.4, dpi = 96, device = cairo_pdf)
-map_region_hurrs_full(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-epac.pdf", width = 6, height = 3.15, dpi = 96, device = cairo_pdf)
+map_region_hurrs(hurr.natl.obs, years.natl, coords.natl.map, coords.natl, steps = c(20, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-natl.pdf", width = 5.75, height = 3.75, dpi = 96, device = cairo_pdf)
+map_region_hurrs(hurr.epac.obs, years.epac, coords.epac.map, coords.epac, steps = c(10, 10), xtra.lims = c(3,2)) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-epac.pdf", width = 6, height = 3.15, dpi = 96, device = cairo_pdf)
 
 # SST map of a raster layer
 map_global_sst(hadsst.raster, 12, 2015) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "map-sst.pdf", width = 6, height = 3, dpi = 96, device = cairo_pdf)
@@ -82,20 +83,20 @@ map_global_sst(hadsst.raster, 12, 2015) #+ theme(text = element_text(family = "L
 # Plot annual SSTs
 # plot_annual_sst_norm(ssts.natl)
 # plot_annual_sst_norm(ssts.epac)
-plot_annual_sst(ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
-plot_annual_sst(ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_annual_sst(ssts.natl) #+ theme_bw() + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-natl.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_annual_sst(ssts.epac) #+ theme_bw() + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "sst-analysis-epac.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
 
 # PDI time series
-plot_pdi_tempseries(hurr.natl.pdi, ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "time-series-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
-plot_pdi_tempseries(hurr.epac.pdi, ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "time-series-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+plot_pdi_tempseries(hurr.natl.pdi, ssts.natl) #+ theme_bw() + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "time-series-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+plot_pdi_tempseries(hurr.epac.pdi, ssts.epac) #+ theme_bw() + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "time-series-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
 
 # DPDI plots
-plot_dpdi(hurr.natl.pdi, years.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
-plot_dpdi(hurr.epac.pdi, years.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+plot_dpdi(hurr.natl.pdi, years.natl) #+ theme_bw() + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-natl.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
+plot_dpdi(hurr.epac.pdi, years.epac) #+ theme_bw() + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-epac.pdf", width = 6.5, height = 3, dpi = 96, device = cairo_pdf)
 
 # DPDI plots by SST class
-plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-natl.pdf", width = 6.5, height = 3.25, dpi = 96, device = cairo_pdf)
-plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac) #+ theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-epac.pdf", width = 6.5, height = 3.25, dpi = 96, device = cairo_pdf)
+plot_dpdi_by_sst_class(hurr.natl.pdi, ssts.natl) #+ theme_bw() + theme(legend.position = c(0.92, 0.80)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-natl.pdf", width = 6.5, height = 3.25, dpi = 96, device = cairo_pdf)
+plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac) #+ theme_bw() + theme(legend.position = c(0.92, 0.80)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "dpdi-by-class-epac.pdf", width = 6.5, height = 3.25, dpi = 96, device = cairo_pdf)
 
 # Get summary of cyclone status
 # table((hurr.natl.obs%>% filter(storm.year %in% years.natl))$status)
@@ -112,47 +113,15 @@ plot_dpdi_by_sst_class(hurr.epac.pdi, ssts.epac) #+ theme(text = element_text(fa
 # write.table(hurr.natl.low.pdi, file = "natl-low.csv", row.names = FALSE, sep = "  ", quote = FALSE)
 # write.table(hurr.epac.low.pdi, file = "epac-low.csv", row.names = FALSE, sep = "  ", quote = FALSE)
 
-# PDI scatterplots
-plot_pdi_scatter(hurr.natl.pdi, ssts.natl) #, no.td = F)
-plot_pdi_scatter(hurr.epac.pdi, ssts.epac) #, no.td = F)
+# PDI scatterplots (duration)
+plot_pdi_scatter_by_status(hurr.natl.pdi, ssts.natl, "ds") #+ theme_bw() + theme(legend.position = c(0.13, 0.65)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-natl-ds.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_pdi_scatter_by_status(hurr.natl.pdi, ssts.natl, "nds") #+ theme_bw() + theme(legend.position = c(0.13, 0.65)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-natl-nds.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_pdi_scatter_by_status(hurr.epac.pdi, ssts.epac, "ds") #+ theme_bw() + theme(legend.position = c(0.13, 0.65)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-epac-ds.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_pdi_scatter_by_status(hurr.epac.pdi, ssts.epac, "nds") #+ theme_bw() + theme(legend.position = c(0.13, 0.65)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-epac-nds.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
 
-# Tests  ---------------------------------------------------
+# PDI scatterplots (wind)
+plot_pdi_scatter_wind(hurr.natl.pdi, ssts.natl) #+ theme_bw() + theme(legend.background = element_blank(), legend.position = c(0.13, 0.65)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-natl-wind.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
+plot_pdi_scatter_wind(hurr.epac.pdi, ssts.epac) #+ theme_bw() + theme(legend.background = element_blank(), legend.position = c(0.13, 0.65)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-epac-wind.pdf", width = 6.5, height = 3.5, dpi = 96, device = cairo_pdf)
 
-# plot_test_scatter <- function(hurr.pdi, ssts){
-# 	hurr.high.pdi <- hurr.pdi %>% filter(storm.year %in% get_high_years(ssts)) %>% filter(max.wind > 34)
-# 	hurr.low.pdi <- hurr.pdi %>% filter(storm.year %in% get_low_years(ssts)) %>% filter(max.wind > 34)
-#
-# 	lm.high.y <- lm(log10(max.wind) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.high.pdi)
-# 	lm.low.y <- lm(log10(max.wind) ~ log10(conv_unit(storm.duration, "sec", "hr")), data = hurr.low.pdi)
-# 	lm.high.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(max.wind), data = hurr.high.pdi)
-# 	lm.low.x <- lm(log10(conv_unit(storm.duration, "sec", "hr")) ~ log10(max.wind), data = hurr.low.pdi)
-#
-# 	years.str <- paste0(year(ssts$year[1]), "-", year(ssts$year[length(ssts$year)]))
-#
-# 	ggplot() +
-# 		aes(x = conv_unit(storm.duration, "sec", "hr"), y = max.wind) +
-# 		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.3) +
-# 		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.3) +
-# 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
-# 		geom_abline(aes(slope = coef(lm.high.y)[[2]], intercept = coef(lm.high.y)[[1]],
-# 										colour = "high.y~x"), linetype = "twodash") +
-# 		geom_abline(aes(slope = coef(lm.low.y)[[2]], intercept = coef(lm.low.y)[[1]],
-# 										colour = "low.y~x"), linetype = "twodash") +
-# 		geom_abline(aes(slope = 1/coef(lm.high.x)[[2]], intercept = -coef(lm.high.x)[[1]]/coef(lm.high.x)[[2]],
-# 										colour = "high.x~y"), linetype = "twodash") +
-# 		geom_abline(aes(slope = 1/coef(lm.low.x)[[2]], intercept = -coef(lm.low.x)[[1]]/coef(lm.low.x)[[2]],
-# 										colour = "low.x~y"), linetype = "twodash") +
-# 		scale_colour_manual(values = c("high" = "brown1", "low" = "dodgerblue1",
-# 																	 "high.y~x" = "red", "low.y~x" = "blue",
-# 																	 "high.x~y" = "darkviolet", "low.x~y" = "green")) +
-# 		guides(color=guide_legend(override.aes = list(linetype = c(0,4,4,0,4,4)))) +
-# 		scale_x_log10() +
-# 		scale_y_log10() +
-# 		# annotate("text", x = 50, y = 3*10^11, label=paste0("r^2 = ", summary(lm.high.y)$r.squared), colour="brown1", size=4) +
-# 		# annotate("text", x = 50, y = 2*10^11, label=paste0("r^2 = ", summary(lm.low.y)$r.squared), colour="dodgerblue1", size=4) +
-# 		labs(title = paste0("PDI Scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")", "; excl. v_max < 34") ,
-# 				 x = "Storm duration (h)", y = "v_max (knot)", colour = "SST Class")
-# }
 
-# plot_test_scatter(hurr.natl.pdi.no.td, ssts.natl)
-# plot_test_scatter(hurr.epac.pdi.no.td, ssts.epac)
+
