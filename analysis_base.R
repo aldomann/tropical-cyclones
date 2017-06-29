@@ -102,8 +102,8 @@ plot_pdi_tempseries <- function(hurr.pdi, ssts){
 
 	ggplot() +
 		aes(x = as.Date(paste(storm.year, "01", "01", sep = "-")), y = storm.pdi, group = 1) +
-		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.5)+
-		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.5)+
+		geom_point(data = hurr.high.pdi, aes(colour = "high"), size = 0.5) +
+		geom_point(data = hurr.low.pdi, aes(colour = "low"), size = 0.5) +
 		scale_colour_manual(values = c("brown1", "dodgerblue1")) +
 		scale_y_log10() +
 		labs(title = paste0("PDI Time series", " (", attr(ssts, "title"), "; ", years.str, ")"),
@@ -279,6 +279,6 @@ plot_pdi_scatter_wind <- function(hurr.pdi, ssts){
 												values = c("high" = "brown1", "low" = "dodgerblue1")) +
 		scale_linetype_manual(values = c("x(y)" = "longdash", "y(x)" = "solid")) +
 		labs(title = paste0("PDI vs wind speed scatterplot", " (", attr(ssts, "title"), "; ", years.str ,")") ,
-				 x = "Maximum wind speed (kt)", y = bquote(PDI~ (m^3 ~s^-2)),
+				 x = bquote(Maximum~wind~speed~ (m~s^-1)), y = bquote(PDI~ (m^3 ~s^-2)),
 				 colour = "SST class", linetype = "Regression")
 }

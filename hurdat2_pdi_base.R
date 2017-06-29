@@ -100,7 +100,7 @@ track_storm_by_id <- function(hurr.obs = hurr.all.obs, id){
 	storm <- wanted.storm$storm.name
 	year <- wanted.storm$storm.year
 
-	ggplot(wanted.storm, aes(x = date.time, y = wind))+
+	ggplot(wanted.storm, aes(x = date.time, y = wind)) +
 		geom_line(linetype="dotted") +
 		geom_point(aes(colour = status)) +
 		labs(title = paste0(storm, " profile ", "(", year, ")",

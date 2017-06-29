@@ -120,8 +120,8 @@ plot_pdi_scatter_by_status(hurr.epac.pdi, ssts.epac, "ds") #+ theme_bw() + theme
 plot_pdi_scatter_by_status(hurr.epac.pdi, ssts.epac, "nds") #+ theme_bw() + theme(legend.position = c(0.13, 0.67)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-epac-nds.pdf", width = 6.5, height = 4, dpi = 96, device = cairo_pdf)
 
 # PDI scatterplots (wind)
-plot_pdi_scatter_wind(hurr.natl.pdi, ssts.natl) + theme_bw() #+ theme(legend.background = element_blank(), legend.position = c(0.13, 0.66)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-natl-wind.pdf", width = 6.5, height = 3.8, dpi = 96, device = cairo_pdf)
-plot_pdi_scatter_wind(hurr.epac.pdi, ssts.epac) + theme_bw() #+ theme(legend.background = element_blank(), legend.position = c(0.13, 0.66)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-epac-wind.pdf", width = 6.5, height = 3.8, dpi = 96, device = cairo_pdf)
+plot_pdi_scatter_wind(hurr.natl.pdi, ssts.natl) #+ theme_bw() + theme(legend.background = element_blank(), legend.position = c(0.13, 0.66)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-natl-wind.pdf", width = 6.5, height = 3.8, dpi = 96, device = cairo_pdf)
+plot_pdi_scatter_wind(hurr.epac.pdi, ssts.epac) #+ theme_bw() + theme(legend.background = element_blank(), legend.position = c(0.13, 0.66)) + theme(text = element_text(family = "LM Roman 10")) + ggsave(filename = "scatter-epac-wind.pdf", width = 6.5, height = 3.8, dpi = 96, device = cairo_pdf)
 
 
 
