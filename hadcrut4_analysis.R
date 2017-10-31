@@ -14,7 +14,7 @@ temps.data <- temps.data %>%
 	dplyr::select(V1, V2) %>%
 	rename(year = V1, temp = V2) %>%
 	mutate(year = ymd(paste(year, "01", "01", sep = "-")))
-				 # temp.class = ifelse(year(year) >= 1975, "high", "low"))
+	# mutate(temp.class = ifelse(year(year) >= 1975, "high", "low"))
 
 # Data visualisation ---------------------------------------
 
