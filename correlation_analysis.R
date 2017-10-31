@@ -41,3 +41,31 @@ attr(ssts.natl, "title") <- "N. Atl."
 
 ssts.epac <- get_mean_ssts(years = years.epac, coords = coords.epac)
 attr(ssts.epac, "title") <- "E. Pac."
+
+# Test functions -------------------------------------------
+
+# plot(ecdf(hurr.all.pdi$storm.pdi))
+# plot(density(hurr.all.pdi$storm.pdi))
+#
+# plot(ecdf(hurr.all.pdi$storm.duration))
+# plot(density(hurr.all.pdi$storm.duration))
+
+plot_ecdf <- function(hurr.pdi, var, ssts, class){
+	if(class == "high"){
+		hurr.pdi <- hurr.pdi %>%
+			filter(storm.year %in% get_high_years(ssts))
+	} else if(class == "low"){
+		hurr.pdi <- hurr.pdi %>%
+			filter(storm.year %in% get_low_years(ssts))
+	}
+	ggplot(hurr.pdi, aes(conv_unit(hurr.pdi[[var]], "sec", "hr"))) +
+		stat_ecdf(geom = "step") +
+		labs(title=paste("Empirical Cummulative Distribution Function for", attr(hurr.pdi, "title")),
+				 x = "Storm duration (h)",
+				 y = "Fn(x)"
+				 )
+}
+
+plot_ecdf(hurr.natl.pdi, "storm.pdi", ssts.natl, "high")
+plot_ecdf(hurr.natl.pdi, "storm.pdi", ssts.natl, "low")
+plot_ecdf(hurr.natl.pdi, "storm.pdi", ssts.natl, "all")
