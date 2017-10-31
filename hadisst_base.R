@@ -79,12 +79,36 @@ get_high_years <- function(data.df) {
 
 # Data visualisation functions -----------------------------
 
-# SST map of a single time layer
+# SST map of a single time layer (continuous version)
 map_global_sst <- function(x = hadsst.raster, month, year){
+	time.layer = month
+	gplot(raster(x, layer = time.layer)) +
+		geom_tile(aes(fill = ifelse(value == -1000, -7.5, value))) +
+		scale_fill_gradientn(colours = c("#760200", "#b10e00", "#ec3b00", "#f9a100", "#d3ed0a", "#88ec6a",
+																		 "#6cd2a8", "#4ca6e8", "#3276fb", "#214FBB", "#010546"),
+												 values = rescale(c(35, 30, 25, 20, 15, 10, 7.5, 5, 2.5, 0, -5)),
+												 breaks=c(30, 25, 20, 15, 10, 5, 0, -5),
+												 labels=c(30, 25, 20, 15, 10, 5, 0, "Ice"),
+												 guide="colourbar", na.value = "white") +
+		labs(fill = "SST") +
+		theme(plot.margin=margin(c(0,10,0,0)),
+					legend.margin=margin(c(1,1,5,-15)),
+					axis.line=element_blank(),
+					axis.text.x=element_blank(),
+					axis.text.y=element_blank(),
+					axis.ticks=element_blank(),
+					axis.title.x=element_blank(),
+					axis.title.y=element_blank(),
+					panel.background=element_blank())
+}
+
+# SST map of a single time layer (discrete version)
+map_global_sst_discr <- function(x = hadsst.raster, month, year){
 	time.layer = (year - 1870) * 12 + month
 	gplot(raster(hadsst.raster, layer = time.layer)) +
 		geom_tile(aes(fill = value)) +
-		scale_fill_gradientn(colours = c("#760200", "#b10e00", "#ec3b00", "#f9a100", "#d3ed0a", "#88ec6a", "#6cd2a8", "#4ca6e8", "#3276fb", "#214FBB", "#010546"),
+		scale_fill_gradientn(colours = c("#760200", "#b10e00", "#ec3b00", "#f9a100", "#d3ed0a", "#88ec6a",
+																		 "#6cd2a8", "#4ca6e8", "#3276fb", "#214FBB", "#010546"),
 												 values = rescale(c(35, 30, 25, 20, 15, 10, 7.5, 5, 2.5, 0, -1000)),
 												 breaks=c(35, 30, 25, 20, 15, 10, 5,  0, -5, -1000),
 												 labels=c(35, 30, 25, 20, 15, 10, 5,  0, -5, "Ice"),
