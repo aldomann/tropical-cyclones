@@ -13,12 +13,13 @@ get_pdis <- function(hurr.obs){
 	hurr.obs.pdi <- hurr.obs %>%
 		group_by(storm.id, storm.name, n.obs) %>%
 		summarise(storm.pdi = sum(conv_unit(wind, "knot", "m_per_sec")^3 * conv_unit(6, "hr", "sec")),
-							max.wind = max(wind)) %>%
+							max.wind = max(wind),
+							mean.wind = mean(wind)) %>%
 		mutate(storm.duration = n.obs * conv_unit(6, "hr", "sec")) %>%
 		mutate(storm.year = substring(storm.id, 5, 9)) %>%
 		filter(storm.pdi != "NA") %>%
 		filter(storm.pdi != 0)
-	hurr.obs.pdi <- hurr.obs.pdi[c("storm.id", "storm.name", "n.obs", "storm.duration", "storm.pdi", "max.wind", "storm.year")]
+	hurr.obs.pdi <- hurr.obs.pdi[c("storm.id", "storm.name", "n.obs", "storm.duration", "storm.pdi", "max.wind", "mean.wind", "storm.year")]
 	return(hurr.obs.pdi)
 }
 
