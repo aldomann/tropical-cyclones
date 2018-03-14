@@ -20,7 +20,7 @@ hurr.natl.pdi <- get_pdis(hurr.natl.obs) %>%
 hurr.epac.pdi <- get_pdis(hurr.epac.obs) %>%
 	dplyr::filter(storm.id != "EP231989") %>%
 	mutate(basin = "EPAC") %>%
-	dplyr::filter(storm.year %in% 1966:2016)
+	dplyr::filter(storm.year %in% 1986:2016)
 
 # hurr.all.pdi <- rbind(hurr.natl.pdi, hurr.epac.pdi)
 
@@ -32,7 +32,7 @@ hadsst.raster <- load_hadsst(file = "data/HadISST_sst.nc")
 years.natl <- 1966:2016
 coords.natl <- c("90W", "20W", "5N", "25N")
 
-years.epac <- 1966:2016
+years.epac <- 1986:2016
 coords.epac <- c("120W", "90W", "5N", "20N")
 
 # Construct SST data frames
@@ -55,12 +55,12 @@ hurr.sst.pdi.epac <- full_join(hurr.epac.pdi, ssts.epac)
 
 # Sort by year
 hurr.sst.pdi.natl <- arrange(hurr.sst.pdi.natl, storm.year)
-hurr.sst.pdi.natl <- arrange(hurr.sst.pdi.natl, storm.year)
+hurr.sst.pdi.epac <- arrange(hurr.sst.pdi.epac, storm.year)
 
 hurr.sst.all.pdi <- rbind(hurr.sst.pdi.natl, hurr.sst.pdi.epac)
 
 # Write into CSV -------------------------------------------
 
-if (!file.exists("data/hurdat2-hadisst-1966-2016.csv")) {
-	write_csv(hurr.sst.all.pdi, "data/hurdat2-hadisst-1966-2016.csv")
+if (!file.exists("data/hurdat2-hadisst-1966-2016_pdis.csv")) {
+	write_csv(hurr.sst.all.pdi, "data/hurdat2-hadisst-1966-2016_pdis.csv")
 }
