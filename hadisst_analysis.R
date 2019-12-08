@@ -4,7 +4,7 @@
 # Source base code -----------------------------------------
 source("hadisst_base.R")
 
-hadsst.raster <- load_hadsst(file = "/home/aldomann/Downloads/Hadley/HadISST_sst.nc")
+hadsst.raster <- load_hadsst(file = "data/HadISST_sst.nc")
 
 # Create SST data frames -----------------------------------
 
