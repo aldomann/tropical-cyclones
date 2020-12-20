@@ -1,0 +1,26 @@
+%-----------------------------------------------------------------
+%	TEMA
+%	!TEX root = ./../main.tex
+%-----------------------------------------------------------------
+\section{Introduction}
+% \todo[inline]{Write the whole thing}
+% \begin{itemize}
+% 	\item Brief outline of the topic and subtopics being covered in the thesis (referencing sections).
+% 	\item Overview of the structure of the code (in terms of how functions are defined in different files and stuff).
+% 	\item A rationale as to why the project is an important addition to the current body of knowledge.
+% 	\item The main objectives of thesis and a brief overview of how these would be achieved.
+% 	\item A hypothesis we want to solve.
+% \end{itemize}
+
+With the intention of quantifying the consequences of global warming, in this thesis we describe the physical and statistical nature of tropical-cyclones in order to introduce a statistical analysis based on the application of the power dissipation index ($PDI$), defined in~\cref{sec:pdi},
+% which constitutes an estimation of released energy,
+to individual tropical-cyclones.
+
+Ultimately, our goal is to replicate the results obtained by \citeauthor{Corral2010} in~\cite{Corral2010} from scratch, following the very process described in the paper, using updated hurricanes track and sea surface temperature (SST) databases to see if the tendency of increasing temperatures implies any significant change in the results found in~\cite{Corral2010} (from \cref{sec:hurdat} to \cref{sec:pdi-vs-sst}).
+
+Apart from this, in \cref{sec:pdi-corrs}, we perform a statistical analysis regarding the influence of the SST, or lack thereof, on the intensity and duration of tropical-cyclones.
+
+\sk
+As the entirety of the behind-the-scenes calculations, plots, and analyses are done using a programming language specific for statistical computing, for the sake of showing a real representation of the work done in this thesis, we include in the Appendix~\ref{app:code} all the code developed structured in \emph{base} scripts that include only functions, and a \inline{main_analysis.R} script that calls all the functions to perform all the appropriate computations.
+
+
