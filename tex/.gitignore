@@ -1,5 +1,6 @@
 *.aux
 *.bbl
+*-blx.bib
 *.bcf
 *.blg
 *.fdb*
